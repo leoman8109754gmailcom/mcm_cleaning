@@ -16,5 +16,22 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+	/* smooth in-page anchor scrolling when clicking the logo */
+	scroll-behavior: smooth;
 }
+
+/* Fixed nav backdrop to improve readability when over content */
+.fixed {
+	background: rgba(255, 235, 208, 0.75); /* slightly translucent to match hero bg */
+	backdrop-filter: blur(4px);
+}
+
+/* Fallback utility to prevent text selection */
+.no-select {
+	-webkit-user-select: none; /* Chrome/Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+	user-select: none; /* Standard */
+}
+
 

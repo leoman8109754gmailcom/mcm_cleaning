@@ -4,6 +4,7 @@ import Logo from './assets/brand-logo.png'
 import HeroIMG from './assets/clean.png'
 import HeroIMG2 from './assets/com.jpg'
 import HeroIMG3 from './assets/res.jpg'
+import StaggeredMenu from './components/StaggeredMenu';
 
 
 const HeroSection = () => {
@@ -15,15 +16,35 @@ const HeroSection = () => {
     if (prefersReduced) return undefined; // don't autoplay
     const id = setInterval(() => {
       setActive(prev => (prev + 1) % images.length);
-    }, 5000); // change every 5 seconds
+    }, 3000); // change every 3 seconds
     return () => clearInterval(id);
   }, [images.length]);
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [isNavVisible, setIsNavVisible] = React.useState(true);
+  const lastScrollY = React.useRef(0);
 
   const toggleMobile = () => setMobileOpen(v => !v);
 
   const closeMobile = () => setMobileOpen(false);
+
+  // show nav on scroll up, hide on scroll down (but keep visible when mobile menu open)
+  React.useEffect(() => {
+    function onScroll() {
+      const currentY = window.scrollY || window.pageYOffset;
+      const isUp = currentY < lastScrollY.current;
+      // if mobile menu open, always show nav
+      if (mobileOpen) {
+        setIsNavVisible(true);
+      } else {
+        setIsNavVisible(isUp || currentY < 10);
+      }
+      lastScrollY.current = Math.max(0, currentY);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [mobileOpen]);
  const navRef = React.useRef(null);
   const menuRef = React.useRef(null);
   const menuTlRef = React.useRef(null);
@@ -103,20 +124,25 @@ const HeroSection = () => {
   }, [mobileOpen, prefersReduced]);
 
   return (
-    <div className="min-h-screen bg-[#FFEBD0] py-0 px-0 md:px-8 lg:px-10">
-      {/* Navigation */}
-  <nav ref={navRef} className="relative z-50 flex items-center justify-between px-0 py-5 ">
+  <div id="hero" className="min-h-screen lg:min-h-[calc(100vh-4rem)] xl:min-h-[calc(100vh-3rem)] bg-[#FFEBD0] pt-24 px-4 pb-12 md:pt-28 md:px-8 lg:pb-16 lg:px-10 xl:pb-20">
+      {/* Navigation (fixed) */}
+  <nav
+    ref={navRef}
+    className={`fixed inset-x-0 top-0 z-50 flex items-center justify-between px-4 py-5 transition-transform duration-300 bg-transparent ${isNavVisible ? 'translate-y-0' : '-translate-y-full'}`}
+  >
         {/* Logo */}
-        <div className="flex items-center">
-          <img
-            src={Logo}
-            alt="McKenna's Cleaning Logo"
-            className="h-16"
-          />
+        <div className="flex items-center xl:px-10">
+          <a href="#hero" aria-label="Go to top">
+            <img
+              src={Logo}
+              alt="McKenna's Cleaning Logo"
+              className="h-16"
+            />
+          </a>
         </div>
 
         {/* Navigation Links */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-8 xl:pr-10">
           {/* desktop links */}
           <div className="hidden md:flex items-center gap-8">
             <a href="#about" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">
@@ -142,71 +168,51 @@ const HeroSection = () => {
             </a>
           </div>
 
-          {/* mobile toggle */}
-          <button
-            className="md:hidden p-2 rounded-md bg-transparent text-gray-800"
-            onClick={toggleMobile}
-            aria-label="Toggle menu"
-            aria-expanded={mobileOpen}
-          >
-            {/* grouped burger lines */}
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g ref={burgerLinesRef} style={{ transformOrigin: '14px 14px' }}>
-                <rect x="5" y="8" width="18" height="2" rx="1" fill="currentColor" />
-                <rect x="5" y="13" width="18" height="2" rx="1" fill="currentColor" />
-                <rect x="5" y="18" width="18" height="2" rx="1" fill="currentColor" />
-              </g>
-              <g ref={closeIconRef} style={{ opacity: 0 }}>
-                <path d="M7 7L21 21M7 21L21 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </g>
-            </svg>
-          </button>
+          {/* mobile menu is handled by the StaggeredMenu component (visible only on mobile) */}
         </div>
-      </nav>
+  </nav>
 
-      {/* Mobile menu overlay */}
-      {/* Mobile menu panel (renders always but toggles classes for slide/opacity) */}
-      <div
-        ref={menuRef}
-        className={`md:hidden fixed top-16 left-0 right-0 bg-[#E1D9C6] z-40 transform transition-transform duration-400 ease-out ${mobileOpen ? 'translate-y-0' : '-translate-y-full'}`}
-        style={{ height: 'calc(70vh - 4rem)' }}
-        aria-hidden={!mobileOpen}
-      >
-        <div className="w-full h-full flex flex-col p-6 rounded-b-xl shadow-lg">
-          <div className="flex items-center justify-between">
-            <div />
-            <button onClick={closeMobile} aria-label="Close menu" className="p-2 rounded-md text-gray-800">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-          </div>
-
-          <nav className="flex-1 flex flex-col justify-center items-center gap-6 text-center">
-            <a onClick={closeMobile} href="#about" className="border-width: 10px; rounded-lg text-gray-800 hover:text-teal-700 transition-colors text-2xl font-medium">About</a>
-            <a onClick={closeMobile} href="#electrostatic" className="text-gray-800 hover:text-teal-700 transition-colors text-2xl font-medium">Electrostatic Spraying</a>
-            <a onClick={closeMobile} href="#residential" className="text-gray-800 hover:text-teal-700 transition-colors text-2xl font-medium">Residential Cleaning</a>
-            <a onClick={closeMobile} href="#commercial" className="text-gray-800 hover:text-teal-700 transition-colors text-2xl font-medium">Commercial Cleaning</a>
-            <a onClick={closeMobile} href="#window" className="text-gray-800 hover:text-teal-700 transition-colors text-2xl font-medium">Window Cleaning</a>
-          </nav>
-
-          <div className="pb-8 text-center">
-            <a onClick={closeMobile} href="#contact" className="bg-teal-700 text-[#EA892C] px-8 py-3 rounded-md hover:bg-teal-800 transition-colors font-bold tracking-wide">CONTACT</a>
-          </div>
-        </div>
+      {/* Mobile menu replaced with StaggeredMenu (mobile-only) */}
+      <div className="md:hidden">
+        <StaggeredMenu
+          position="right"
+          items={[
+            { label: 'About', ariaLabel: 'About', link: '#about' },
+            { label: 'Electrostatic Spraying', ariaLabel: 'Electrostatic Spraying', link: '#electrostatic' },
+            { label: 'Residential Cleaning', ariaLabel: 'Residential Cleaning', link: '#residential' },
+            { label: 'Commercial Cleaning', ariaLabel: 'Commercial Cleaning', link: '#commercial' },
+            { label: 'Window Cleaning', ariaLabel: 'Window Cleaning', link: '#window' },
+            { label: 'CONTACT', ariaLabel: 'Contact', link: '#contact' }
+          ]}
+          socialItems={[
+            { label: 'Twitter', link: 'https://twitter.com' },
+            { label: 'GitHub', link: 'https://github.com' },
+            { label: 'LinkedIn', link: 'https://linkedin.com' }
+          ]}
+          displaySocials={true}
+          displayItemNumbering={true}
+          menuButtonColor="#fff"
+          openMenuButtonColor="#fff"
+          changeMenuColorOnOpen={true}
+          colors={["#B19EEF", "#5227FF"]}
+          logoUrl={Logo}
+          accentColor="#ff6b6b"
+          onMenuOpen={() => setMobileOpen(true)}
+          onMenuClose={() => setMobileOpen(false)}
+        />
       </div>
 
       {/* Hero Content */}
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto items-center">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto items-center h-full">
   {/* Left Column - Text Content */}
-  <div className="space-y-8 text-left">
-          <h1 className="font-bayon text-4xl lg:text-6xl font-medium text-teal-800 leading-tight">
+  <div className="space-y-8 text-left self-start lg:self-center select-none no-select xl:-ml-60">
+    <h1 className="font-bayon text-4xl lg:text-7xl xl:text-8xl font-medium text-teal-800 leading-tight">
             MCKENNA'S CLEANING
             <br />
             <span className="block mt-2">SERVICES</span>
           </h1>
           
-          <p className="font-bayon text-2xl text-orange-500 font-light text-left">
+          <p className="font-bayon text-2xl lg:text-3xl xl:text-4xl text-orange-500 font-light text-left">
             We are a cleaning buisness<br />
             serving the Medina County area<br />
             prepared to tackle all your cleaning needs.<br /> 
@@ -215,14 +221,14 @@ const HeroSection = () => {
 
           <a 
             href="#contact" 
-            className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg"
+            className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg lg:text-xl xl:text-2xl"
           >
             CONTACT
           </a>
         </div>
 
         {/* Right Column - Crossfade Carousel */}
-        <div className="relative h-96 lg:h-[30rem] overflow-hidden rounded-lg shadow-2xl">
+  <div className="relative h-96 lg:h-full xl:h-[calc(100vh-8rem)] overflow-hidden rounded-lg shadow-2xl xl:-mr-60">
           {images.map((src, i) => (
             <img
               key={i}
