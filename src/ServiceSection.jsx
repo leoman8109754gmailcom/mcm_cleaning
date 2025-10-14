@@ -1,6 +1,9 @@
 import React from 'react';
 import { gsap } from 'gsap';
-import windowImg from './assets/window.png';
+import windowIMG from './assets/window.png';
+import commercialIMG from './assets/com.jpg';
+import residentialIMG from './assets/res.jpg';
+import staticIMG from './assets/static.jpg';
 
 function MenuItem({ link, text, image }) {
   const itemRef = React.useRef(null);
@@ -35,8 +38,8 @@ function MenuItem({ link, text, image }) {
       .to(marqueeInnerRef.current, { y: edge === 'top' ? '101%' : '-101%' });
   };
 
-  const repeatedMarqueeContent = Array.from({ length: 4 }).map((_, idx) => (
-    <React.Fragment key={idx} className="bg-[#FFEBD0]">
+  const repeatedMarqueeContent = Array.from({ length: 10 }).map((_, idx) => (
+    <React.Fragment key={idx}>
       <span className="text-[#EA892C] uppercase font-normal text-[4vh] leading-[1.2] p-[1vh_1vw_0]">{text}</span>
       <div
         className="w-[200px] h-[7vh] my-[2em] mx-[2vw] p-[1em_0] rounded-[50px] bg-cover bg-center"
@@ -46,9 +49,9 @@ function MenuItem({ link, text, image }) {
   ));
 
   return (
-    <div className="flex-1 relative overflow-hidden text-center border-t border-[#FFEBD0] " ref={itemRef}>
+    <div className="flex-1 relative overflow-hidden text-center border-t-[0px] border-[#2B5F5F]" ref={itemRef}>
       <a
-        className="font-bayon flex items-center justify-center h-full relative cursor-pointer uppercase no-underline text-[#EA892C] text-[4vh] tracking-wider hover:text-[#060010] focus:text-[#E8D4B8] focus-visible:text-[#060010] transition-colors"
+        className="font-bayon flex items-center justify-center h-full relative cursor-pointer uppercase no-underline font-bold text-[#EA892C] text-[4vh] tracking-wider hover:text-[#060010] focus:text-[#E8D4B8] focus-visible:text-[#060010] transition-colors"
         href={link}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -74,35 +77,35 @@ function ServicesSection() {
     {
       link: '#windows',
       text: 'WINDOWS.',
-      image: windowImg,
+      image: windowIMG // imported image file
     },
     {
       link: '#commercial',
       text: 'COMMERCIAL.',
-      image: windowImg, // placeholder until you add a commercial image
+      image: commercialIMG // Replace with your actual image path
     },
     {
       link: '#residential',
       text: 'RESIDENTIAL.',
-      image: windowImg, // placeholder until you add a residential image
+      image: residentialIMG // Replace with your actual image path
     },
     {
       link: '#electrostatic',
       text: 'ELECTROSTATIC.',
-      image: windowImg, // placeholder until you add an electrostatic image
+      image: staticIMG // Replace with your actual image path
     }
   ];
 
   return (
-    <section className="w-full min-h-screen bg-[#17616E] py-16">
+    <section className="w-full min-h-screen bg-[#2B6B6B] py-16">
       <div className="max-w-7xl mx-auto px-8">
         {/* Section Title */}
-        <h2 className=" font-bayon text-5xl md:text-6xl font-bold text-center text-[#E8D4B8] mb-16 tracking-wide uppercase">
+        <h2 className="font-bayon text-5xl md:text-6xl font-medium text-center text-[#E8D4B8] mb-16 tracking-wide uppercase">
           MULTIPLE CLEANING SERVICES
         </h2>
 
         {/* Flowing Menu */}
-        <div className="w-full h-[600px] md:h-[700px]">
+  <div className="w-full h-[400px] md:h-[600px] lg:h-[700px]">
           <nav className="flex flex-col h-full m-0 p-0">
             {services.map((item, idx) => (
               <MenuItem key={idx} {...item} />
