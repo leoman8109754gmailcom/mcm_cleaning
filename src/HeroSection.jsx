@@ -124,7 +124,7 @@ const HeroSection = () => {
   }, [mobileOpen, prefersReduced]);
 
   return (
-  <div id="hero" className="min-h-screen lg:min-h-[calc(100vh-4rem)] xl:min-h-[calc(100vh-3rem)] bg-[#FFEBD0] pt-24 px-4 pb-12 md:pt-28 md:px-8 lg:pb-16 lg:px-10 xl:pb-20">
+  <div id="hero" className="min-h-screen bg-[#FFEBD0] pt-24 px-4 pb-12 md:pt-28 md:px-8 lg:pb-16 lg:px-10 xl:pb-20">
       {/* Navigation (fixed) */}
   <nav
     ref={navRef}
@@ -145,30 +145,13 @@ const HeroSection = () => {
         <div className="flex items-center gap-8 xl:pr-10">
           {/* desktop links */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="#about" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">
-              About
-            </a>
-            <a href="#electrostatic" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">
-              Electrostatic Spraying
-            </a>
-            <a href="#residential" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">
-              Residential Cleaning
-            </a>
-            <a href="#commercial" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">
-              Commercial Cleaning
-            </a>
-            <a href="#window" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">
-              Window Cleaning
-            </a>
-            <a 
-              href="#contact" 
-              className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg"
-            >
-              CONTACT
-            </a>
+            <a href="#about" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">About</a>
+            <a href="#electrostatic" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">Electrostatic Spraying</a>
+            <a href="#residential" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">Residential Cleaning</a>
+            <a href="#commercial" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">Commercial Cleaning</a>
+            <a href="#window" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">Window Cleaning</a>
+            <a href="#contact" className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg">CONTACT</a>
           </div>
-
-          {/* mobile menu is handled by the StaggeredMenu component (visible only on mobile) */}
         </div>
   </nav>
 
@@ -191,8 +174,8 @@ const HeroSection = () => {
           ]}
           displaySocials={true}
           displayItemNumbering={true}
-          menuButtonColor="#fff"
-          openMenuButtonColor="#fff"
+          menuButtonColor="#17616E"
+          openMenuButtonColor="#17616E"
           changeMenuColorOnOpen={true}
           colors={["#B19EEF", "#5227FF"]}
           logoUrl={Logo}
@@ -203,16 +186,16 @@ const HeroSection = () => {
       </div>
 
       {/* Hero Content */}
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto items-center h-full">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 max-w-7xl mx-auto items-center h-full">
   {/* Left Column - Text Content */}
-  <div className="space-y-8 text-left self-start lg:self-center select-none no-select xl:-ml-60">
-    <h1 className="font-bayon text-4xl lg:text-7xl xl:text-8xl font-medium text-teal-800 leading-tight">
+  <div className="space-y-6 text-left self-center select-none no-select max-w-xl lg:pr-8 xl:pr-16">
+    <h1 className="font-bayon text-[clamp(2rem,6.5vw,5.5rem)] font-medium text-teal-800 leading-tight">
             MCKENNA'S CLEANING
             <br />
             <span className="block mt-2">SERVICES</span>
           </h1>
-          
-          <p className="font-bayon text-2xl lg:text-3xl xl:text-4xl text-orange-500 font-light text-left">
+
+          <p className="font-bayon text-[clamp(1rem,2.5vw,1.5rem)] text-orange-500 font-light text-left">
             We are a cleaning buisness<br />
             serving the Medina County area<br />
             prepared to tackle all your cleaning needs.<br /> 
@@ -221,21 +204,21 @@ const HeroSection = () => {
 
           <a 
             href="#contact" 
-            className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 lg:px-6 lg:py-2 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg lg:text-xl xl:text-2xl"
+            className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 sm:px-5 sm:py-2 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg sm:text-xl"
           >
             CONTACT
           </a>
         </div>
 
         {/* Right Column - Crossfade Carousel */}
-  <div className="relative h-96 lg:h-full xl:h-[calc(100vh-8rem)] overflow-hidden rounded-lg shadow-2xl xl:-mr-60">
+  <div className="relative w-full overflow-hidden rounded-lg shadow-2xl h-64 sm:h-80 md:h-96 lg:h-[60vh] xl:h-[70vh] lg:pl-8 xl:pl-16 lg:border-l lg:border-white/10">
           {images.map((src, i) => (
             <img
               key={i}
               src={src}
               alt={`Hero ${i + 1}`}
               loading="lazy"
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-linear ${i === active ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-linear ${i === active ? 'opacity-100' : 'opacity-0'}`}
             />
           ))}
         </div>

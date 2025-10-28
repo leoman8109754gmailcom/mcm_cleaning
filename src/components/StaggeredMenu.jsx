@@ -10,8 +10,8 @@ export default function StaggeredMenu({
   socialItems = [],
   displaySocials = false,
   displayItemNumbering = false,
-  menuButtonColor = '#000',
-  openMenuButtonColor = '#000',
+  menuButtonColor = '#17616E',
+  openMenuButtonColor = '#17616E',
   changeMenuColorOnOpen = false,
   colors = [],
   logoUrl = '',
@@ -63,7 +63,7 @@ export default function StaggeredMenu({
       <div
         role="dialog"
         aria-hidden={!open}
-        className={`fixed top-0 ${position === 'right' ? 'right-0' : 'left-0'} h-full w-full sm:w-[420px] bg-[#111] text-white transform transition-transform duration-300 ${open ? 'translate-x-0' : position === 'right' ? 'translate-x-full' : '-translate-x-full'}`}
+        className={`fixed top-0 ${position === 'right' ? 'right-0' : 'left-0'} h-full w-full sm:w-[420px] bg-[#111] text-[#EA892C] transform transition-transform duration-300 ${open ? 'translate-x-0' : position === 'right' ? 'translate-x-full' : '-translate-x-full'}`}
         style={{ zIndex: 60 }}
       >
         <div className="p-6 h-full flex flex-col justify-between">
@@ -88,7 +88,7 @@ export default function StaggeredMenu({
             <div className="pt-6 border-t border-white/10">
               <div className="flex gap-4 mt-4">
                 {socialItems.map((s, i) => (
-                  <a key={i} href={s.link} className="text-sm text-white/80 hover:text-white">{s.label}</a>
+                  <a key={i} href={s.link} className="text-sm text-[#17616E] hover:text-white">{s.label}</a>
                 ))}
               </div>
             </div>
