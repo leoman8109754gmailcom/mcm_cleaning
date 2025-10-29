@@ -194,20 +194,24 @@ const HeroSection = () => {
             <br />
             <span className="block mt-2">SERVICES</span>
           </h1>
-
+        <div className="space-y-6 bg-[#17616E] rounded-lg shadow-lg p-4">
           <p className="font-bayon text-[clamp(1rem,2.5vw,1.5rem)] text-orange-500 font-light text-left">
             We are a cleaning buisness<br />
             serving the Medina County area<br />
             prepared to tackle all your cleaning needs.<br /> 
-            Give us a call today!
           </p>
 
+          <p className="font-bayon text-[clamp(1rem,2.5vw,1.5rem)] text-orange-500 font-light text-left">
+            Check out our multiple services down below
+          </p>
+        
           <a 
             href="#contact" 
             className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 sm:px-5 sm:py-2 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg sm:text-xl"
           >
             CONTACT
           </a>
+        </div>
         </div>
 
         {/* Right Column - Crossfade Carousel */}
