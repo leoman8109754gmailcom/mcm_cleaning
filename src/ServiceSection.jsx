@@ -85,12 +85,12 @@ function ServicesSection() {
       image: commercialIMG // Replace with your actual image path
     },
     {
-      link: '#residential',
+      link: '/residential-cleaning',
       text: 'RESIDENTIAL.',
       image: residentialIMG // Replace with your actual image path
     },
     {
-      link: '#electrostatic',
+      link: '/electrostatic-cleaning',
       text: 'ELECTROSTATIC.',
       image: staticIMG // Replace with your actual image path
     }
