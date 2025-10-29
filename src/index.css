@@ -1,5 +1,4 @@
-/* Import Google font Bayon */
-@import url('https://fonts.googleapis.com/css2?family=Bayon&display=swap');
+/* Bayon font is loaded via a <link> in index.html for better reliability */
 
 @tailwind base;
 @tailwind components;
@@ -20,8 +19,8 @@ body {
 	scroll-behavior: smooth;
 }
 
-/* Fixed nav backdrop to improve readability when over content */
-.fixed {
+/* Named nav backdrop utility — don't override every element with the `fixed` class */
+.nav-backdrop {
 	background: rgba(255, 235, 208, 0.75); /* slightly translucent to match hero bg */
 	backdrop-filter: blur(4px);
 }

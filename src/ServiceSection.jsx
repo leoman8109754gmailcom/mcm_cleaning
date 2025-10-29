@@ -75,12 +75,12 @@ function MenuItem({ link, text, image }) {
 function ServicesSection() {
   const services = [
     {
-      link: '#windows',
+      link: '/windowser',
       text: 'WINDOWS.',
       image: windowIMG // imported image file
     },
     {
-      link: '#commercial',
+      link: '/commercial-cleaning',
       text: 'COMMERCIAL.',
       image: commercialIMG // Replace with your actual image path
     },

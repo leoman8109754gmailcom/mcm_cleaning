@@ -1,9 +1,8 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
 
-// Lightweight StaggeredMenu replacement. It accepts the props from your snippet
-// and renders a simple slide-in panel from the right. This is not a full GSAP
-// staggered animation version, but it's accessible and easy to extend.
-
+// Lightweight StaggeredMenu replacement with a page overlay and a slide-in panel.
 export default function StaggeredMenu({
   position = 'right',
   items = [],
@@ -13,9 +12,7 @@ export default function StaggeredMenu({
   menuButtonColor = '#17616E',
   openMenuButtonColor = '#17616E',
   changeMenuColorOnOpen = false,
-  colors = [],
   logoUrl = '',
-  accentColor = '#ff6b6b',
   onMenuOpen = () => {},
   onMenuClose = () => {},
 }) {
@@ -25,46 +22,27 @@ export default function StaggeredMenu({
     if (open) onMenuOpen(); else onMenuClose();
   }, [open]);
 
-  return (
-    <div className="staggered-menu-root">
-      {/* explicit top-right hamburger button (mobile-only) */}
-      <button
-        aria-label={open ? 'Close menu' : 'Open menu'}
-        onClick={() => setOpen(v => !v)}
-        className="md:hidden"
-        style={{
-          position: 'fixed',
-          top: 8,
-          right: 8,
-          zIndex: 99999,
-          width: 44,
-          height: 44,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'transparent',
-          border: 'none',
-          padding: 6,
-          color: open && changeMenuColorOnOpen ? openMenuButtonColor : menuButtonColor,
-        }}
-      >
-        {/* SVG hamburger / close icon */}
-        {open ? (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-            <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        ) : (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-            <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        )}
-      </button>
+  const portalRoot = typeof document !== 'undefined' ? document.body : null;
 
+  // overlay + panel markup to portal so it escapes any stacking context on the page
+  const overlayAndPanel = (
+    <>
+      {/* page overlay */}
+      {open && (
+        <div
+          role="presentation"
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 bg-black/50"
+          style={{ zIndex: 99980 }}
+        />
+      )}
+
+      {/* slide-in panel */}
       <div
         role="dialog"
         aria-hidden={!open}
-        className={`fixed top-0 ${position === 'right' ? 'right-0' : 'left-0'} h-full w-full sm:w-[420px] bg-[#111] text-[#EA892C] transform transition-transform duration-300 ${open ? 'translate-x-0' : position === 'right' ? 'translate-x-full' : '-translate-x-full'}`}
-        style={{ zIndex: 60 }}
+        className={`fixed top-0 ${position === 'right' ? 'right-0' : 'left-0'} h-full w-full sm:w-[420px] bg-[#FFEBD0] text-[#EA892C] transform transition-transform duration-300 ${open ? 'translate-x-0' : position === 'right' ? 'translate-x-full' : '-translate-x-full'}`}
+        style={{ zIndex: 99990 }}
       >
         <div className="p-6 h-full flex flex-col justify-between">
           <div>
@@ -75,12 +53,30 @@ export default function StaggeredMenu({
             )}
 
             <nav className="flex flex-col gap-6">
-              {items.map((it, idx) => (
-                <a key={idx} href={it.link} aria-label={it.ariaLabel} className="text-2xl font-bold hover:opacity-80" onClick={() => setOpen(false)}>
-                  {displayItemNumbering ? `${String(idx + 1).padStart(2, '0')} ` : ''}
-                  {it.label}
-                </a>
-              ))}
+              {/* Home link for easy navigation */}
+              <Link to="/" aria-label="Home" className="text-2xl font-bold hover:opacity-80" onClick={() => setOpen(false)}>
+                Home
+              </Link>
+
+              {items.map((it, idx) => {
+                const isInternal = typeof it.link === 'string' && it.link.startsWith('/');
+                const content = (
+                  <>
+                    {displayItemNumbering ? `${String(idx + 1).padStart(2, '0')} ` : ''}
+                    {it.label}
+                  </>
+                );
+
+                return isInternal ? (
+                  <Link key={idx} to={it.link} aria-label={it.ariaLabel} className="text-2xl font-bold hover:opacity-80" onClick={() => setOpen(false)}>
+                    {content}
+                  </Link>
+                ) : (
+                  <a key={idx} href={it.link} aria-label={it.ariaLabel} className="text-2xl font-bold hover:opacity-80" onClick={() => setOpen(false)}>
+                    {content}
+                  </a>
+                );
+              })}
             </nav>
           </div>
 
@@ -95,6 +91,54 @@ export default function StaggeredMenu({
           )}
         </div>
       </div>
+    </>
+  );
+
+  // button markup moved into the portal so it isn't affected by transformed ancestors
+  const buttonElement = (
+    <button
+      aria-label={open ? 'Close menu' : 'Open menu'}
+      onClick={() => setOpen(v => !v)}
+      className="md:hidden flex items-center justify-center w-11 h-11"
+      style={{
+        position: 'fixed',
+        top: 8,
+        right: 8,
+        zIndex: 100000,
+        background: 'transparent',
+        border: 'none',
+        padding: 6,
+        // prefer a high-contrast close icon when menu is open unless a custom open color is requested
+        color: open ? (changeMenuColorOnOpen ? openMenuButtonColor : '#FFFFFF') : menuButtonColor,
+      }}
+    >
+      {open ? (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d="M6 6L18 18M6 18L18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      ) : (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
+    </button>
+  );
+
+  return (
+    <div className="staggered-menu-root">
+      {/* portal the overlay + panel and the hamburger button so they escape stacking contexts */}
+      {portalRoot ? createPortal(
+        <>
+          {buttonElement}
+          {overlayAndPanel}
+        </>,
+        portalRoot
+      ) : (
+        <>
+          {buttonElement}
+          {overlayAndPanel}
+        </>
+      )}
     </div>
   );
 }
