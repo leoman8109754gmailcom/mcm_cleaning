@@ -24,19 +24,22 @@ function WindowCleaningPage() {
   const startXRef = React.useRef(0);
   const isDragging = React.useRef(false);
   const [dragOffset, setDragOffset] = useState(0);
+  const [isDraggingState, setIsDraggingState] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Use local project assets for the carousel
+  // NOTE: removed the trailing duplicate here — cloned slides are added later when needed.
   const images = [
     windowIMG,
     cleanIMG,
     commercialIMG,
     residentialIMG,
-    windowIMG,
   ];
 
   const onTouchStart = (e) => {
     if (!e.touches || e.touches.length === 0) return;
     isDragging.current = true;
+    setIsDraggingState(true);
     startXRef.current = e.touches[0].clientX;
     setDragOffset(0);
   };
@@ -58,10 +61,11 @@ function WindowCleaningPage() {
     }
     isDragging.current = false;
     setDragOffset(0);
+    setIsDraggingState(false);
   };
 
   // mouse drag (desktop)
-  React.useEffect(() => {
+    React.useEffect(() => {
     function onMouseMove(e) {
       if (!isDragging.current) return;
       const delta = e.clientX - startXRef.current;
@@ -79,6 +83,7 @@ function WindowCleaningPage() {
       }
       isDragging.current = false;
       setDragOffset(0);
+      setIsDraggingState(false);
     }
 
     window.addEventListener('mousemove', onMouseMove);
@@ -91,12 +96,173 @@ function WindowCleaningPage() {
 
   // auto-rotate removed - carousel now supports manual navigation and live dragging
 
+  // autoplay for the static carousel (copied from AboutUs)
+  React.useEffect(() => {
+    if (isPaused) return undefined;
+    const id = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(id);
+  }, [isPaused, images.length]);
+
+  // Lightbox / Modal for enlarged images with zoom and pan
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const panStartRef = React.useRef({ x: 0, y: 0 });
+  const isPanningRef = React.useRef(false);
+  const swipeStartRef = React.useRef(null);
+  const overlayRef = React.useRef(null);
+  const lastPinchDistanceRef = React.useRef(null);
+
+  const openLightbox = (idx) => {
+    setLightboxIndex(idx);
+    setLightboxOpen(true);
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+  };
+
+  const nextLightbox = () => {
+    setLightboxIndex((i) => (i + 1) % images.length);
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+  };
+
+  const prevLightbox = () => {
+    setLightboxIndex((i) => (i - 1 + images.length) % images.length);
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+  };
+
+  const zoomIn = () => setZoom((z) => Math.min(3, +(z + 0.5).toFixed(2)));
+  const zoomOut = () => setZoom((z) => Math.max(1, +(z - 0.5).toFixed(2)));
+
+  // prevent body scroll while lightbox open
+  React.useEffect(() => {
+    if (lightboxOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = prev; };
+    }
+    return undefined;
+  }, [lightboxOpen]);
+
+  // keyboard navigation inside lightbox
+  React.useEffect(() => {
+    if (!lightboxOpen) return undefined;
+    function onKey(e) {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') nextLightbox();
+      if (e.key === 'ArrowLeft') prevLightbox();
+      if (e.key === '+') zoomIn();
+      if (e.key === '-') zoomOut();
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightboxOpen]);
+
+  // panning handlers for lightbox (mouse & touch)
+  const onLightboxPointerDown = (clientX, clientY) => {
+    isPanningRef.current = true;
+    panStartRef.current = { x: clientX - offset.x, y: clientY - offset.y };
+  };
+
+  const onLightboxPointerMove = (clientX, clientY) => {
+    if (!isPanningRef.current) return;
+    const nx = clientX - panStartRef.current.x;
+    const ny = clientY - panStartRef.current.y;
+    setOffset({ x: nx, y: ny });
+  };
+
+  const onLightboxPointerUp = () => {
+    isPanningRef.current = false;
+  };
+
+  const onOverlayPointerDown = (e) => {
+    const touches = e.touches;
+    if (touches && touches.length === 2) {
+      // start pinch
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      lastPinchDistanceRef.current = Math.hypot(dx, dy);
+      // prevent native pinch-zoom
+      e.preventDefault?.();
+      return;
+    }
+
+    const clientX = touches ? touches[0].clientX : e.clientX;
+    const clientY = touches ? touches[0].clientY : e.clientY;
+    swipeStartRef.current = { x: clientX, y: clientY, t: Date.now() };
+    if (zoom > 1) onLightboxPointerDown(clientX, clientY);
+  };
+
+  const onOverlayPointerMove = (e) => {
+    const touches = e.touches;
+    if (touches && touches.length === 2) {
+      // pinch handling
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      const dist = Math.hypot(dx, dy);
+      const last = lastPinchDistanceRef.current || dist;
+      const ratio = dist / last;
+      // apply ratio to zoom, clamp between 1 and 3
+      setZoom((z) => {
+        const nz = Math.min(3, Math.max(1, +(z * ratio).toFixed(3)));
+        return nz;
+      });
+      lastPinchDistanceRef.current = dist;
+      // prevent native pinch-zoom while interacting
+      e.preventDefault?.();
+      return;
+    }
+
+    const clientX = touches ? touches[0].clientX : e.clientX;
+    const clientY = touches ? touches[0].clientY : e.clientY;
+    if (zoom > 1) onLightboxPointerMove(clientX, clientY);
+  };
+
+  const onOverlayPointerUp = (e) => {
+    const touches = e.changedTouches || e.touches || null;
+    // end pinch
+    if (lastPinchDistanceRef.current && (!touches || touches.length < 2)) {
+      lastPinchDistanceRef.current = null;
+    }
+
+    const start = swipeStartRef.current;
+    const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+    if (zoom > 1) {
+      onLightboxPointerUp();
+    } else if (start) {
+      const dx = clientX - start.x;
+      if (Math.abs(dx) > 60) {
+        if (dx < 0) nextLightbox(); else prevLightbox();
+      }
+    }
+    swipeStartRef.current = null;
+  };
+
+  const onOverlayWheel = (e) => {
+    // scroll to zoom on desktop inside lightbox
+    if (!lightboxOpen) return;
+    e.preventDefault();
+    const delta = -e.deltaY; // wheel up -> positive
+    const factor = 1 + (delta * 0.0015);
+    setZoom((z) => Math.min(3, Math.max(1, +(z * factor).toFixed(3))));
+  };
+
   return (
     <section className="w-full min-h-screen bg-[#FFEBD0] relative overflow-hidden">
   {/* Top Section with Title - add extra top padding so fixed nav doesn't overlap */}
   <div className="font-bayon relative pt-24 md:pt-28 pb-8">
-        <h1 className="text-3xl md:text-6xl font-bold text-center text-[#2B6B6B] uppercase tracking-wide">
-          WINDOW CLEANING
+        <h1 className=" text-3xl md:text-6xl font-bold text-center text-[#2B6B6B] uppercase tracking-wide">
+          Window CLEANING
         </h1>
       </div>
 
@@ -142,121 +308,87 @@ function WindowCleaningPage() {
         </svg>
       </div>
 
-      {/* Image Carousel Section */}
+      {/* Bottom Image Carousel (copied from AboutUs) */}
       <div className="py-17 px-8">
         <div className="max-w-6xl mx-auto">
-          {/* Carousel Container */}
-          <div className="relative mb-16">
-            {/* Previous Button */}
-            <button
-              onClick={() => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-[#2B6B6B] text-white p-3 rounded-full hover:bg-[#1A5A5A] transition-colors shadow-lg"
-              aria-label="Previous image"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            {/* Images Container */}
+          <div className="relative">
             <div
-              className="overflow-hidden px-4 md:px-12"
+              className="overflow-hidden rounded-3xl bg-[#FFEBD0]"
               ref={containerRef}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
-              onMouseDown={(e) => { e.preventDefault(); isDragging.current = true; startXRef.current = e.clientX; setDragOffset(0); }}
+              onMouseDown={(e) => { e.preventDefault(); isDragging.current = true; setIsDraggingState(true); startXRef.current = e.clientX; setDragOffset(0); }}
+              style={{ touchAction: 'pan-y', userSelect: 'none' }}
             >
-              <div 
-                className="flex gap-6 md:gap-8 transition-transform duration-1000 ease-out"
-                style={{ transform: (() => {
-                  const cw = containerRef.current ? containerRef.current.clientWidth : 0;
-
-                  if (visibleCount === 1 && containerRef.current) {
-                    // Find the slide DOM node for the current image index (uses data-orig-index attr set on slides)
-                    const slides = Array.from(containerRef.current.querySelectorAll('[data-orig-index]'));
-                    const target = slides.find(el => Number(el.dataset.origIndex) === currentImageIndex);
-                    if (target) {
-                      const slideLeft = target.offsetLeft; // position relative to container
-                      const slideW = target.clientWidth;
-                      const centeredOffset = (cw - slideW) / 2;
-                      // small correction to counter visual left-shift on some devices (half the gap)
-                      const gapPx = visibleCount >= 3 ? 32 : 24;
-                      const correction = gapPx / 2;
-                      const tx = -slideLeft + centeredOffset + correction + (dragOffset || 0);
-                      return `translateX(${tx}px)`;
-                    }
-                  }
-
-                  const slideW = visibleCount ? cw / visibleCount : 0;
-                  const base = currentImageIndex * slideW;
-                  const tx = -base + (dragOffset || 0);
-                  return `translateX(${tx}px)`;
-                })() }}
+              <div
+                className="flex w-full"
+                style={{
+                  transform: (() => {
+                    const container = containerRef.current;
+                    const cw = container ? container.clientWidth : 1;
+                    const dragPercent = (dragOffset / cw) * 100;
+                    const base = currentImageIndex * 100;
+                    const translate = -base + dragPercent;
+                    return `translateX(${translate}%)`;
+                  })(),
+                  transition: isDraggingState ? 'none' : 'transform 600ms cubic-bezier(.22,.9,.31,1)'
+                }}
               >
-                {images.concat(images.slice(0, visibleCount - 1)).map((image, index) => {
-                  const origIndex = index % images.length;
-                  // position of this item relative to currentImageIndex (0..images.length-1)
-                  const rel = (origIndex - currentImageIndex + images.length) % images.length;
-                  const centerOffset = Math.floor(visibleCount / 2); // 1 when visibleCount=3
-                  const isCenter = rel === centerOffset;
-
-                  const itemWidthPercent = visibleCount === 1 ? 90 : 100 / visibleCount;
-
-                  return (
-                    <div
-                      key={`${image}-${index}`}
-                      className={`flex-shrink-0 transition-all duration-700 ${isCenter ? 'z-30' : 'opacity-80'}`}
-                      data-orig-index={origIndex}
-                      style={{ flex: `0 0 ${itemWidthPercent}%`, overflow: 'visible' }}
-                    >
-                      {/* Keep a rounded container that clips the image itself, but allow the slide to scale/overflow so the center can overlap neighbors */}
-                      <div
-                        className="rounded-xl overflow-hidden shadow-xl transition-transform duration-700 ease-out mx-2"
-                        style={{
-                          transform: `scale(${isCenter ? (visibleCount >= 3 ? 2.1 : 1.25) : 1})`,
-                          transitionProperty: 'transform',
-                        }}
-                      >
-                        <img
-                          src={image}
-                          alt={`Window cleaning ${origIndex + 1}`}
-                          className="w-full h-64 md:h-72 object-cover"
-                        />
-                      </div>
+                  {images.map((src, idx) => (
+                    <div key={idx} className="flex-shrink-0 w-full flex items-center justify-center min-h-[350px] overflow-hidden p-4">
+                        <div className="inline-block rounded-xl overflow-hidden">
+                          <img
+                            src={src}
+                            alt={`Gallery image ${idx + 1}`}
+                            onClick={() => openLightbox(idx)}
+                            className="block max-w-full h-[350px] md:h-[420px] object-contain cursor-zoom-in"
+                          />
+                        </div>
                     </div>
-                  );
-                })}
+                  ))}
               </div>
             </div>
 
-            {/* Next Button */}
-            <button
-              onClick={() => setCurrentImageIndex((prev) => (prev + 1) % images.length)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-[#2B6B6B] text-white p-3 rounded-full hover:bg-[#1A5A5A] transition-colors shadow-lg"
-              aria-label="Next image"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Carousel Navigation Dots */}
-          <div className="flex justify-center gap-2 mb-16">
-            {images.map((_, index) => (
+            {/* Navigation Arrows */}
+            <div className="flex justify-center gap-6 mt-4">
               <button
-                key={index}
-                onClick={() => setCurrentImageIndex(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 
-                  ${index === currentImageIndex ? 'bg-[#2B6B6B] w-8' : 'bg-gray-400'}`}
-                aria-label={`Go to image ${index + 1}`}
-              />
-            ))}
+                onClick={() => { setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length); setIsPaused(true); setTimeout(() => setIsPaused(false), 2000); }}
+                className="p-3 bg-white/90 hover:bg-white rounded-full transition-colors shadow"
+                aria-label="Previous image"
+              >
+                <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                onClick={() => { setCurrentImageIndex((prev) => (prev + 1) % images.length); setIsPaused(true); setTimeout(() => setIsPaused(false), 2000); }}
+                className="p-3 bg-white/90 hover:bg-white rounded-full transition-colors shadow"
+                aria-label="Next image"
+              >
+                <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Indicators */}
+            <div className="flex justify-center gap-3 mt-4">
+              {images.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentImageIndex(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                  className={`w-3 h-3 rounded-full transition-all ${i === currentImageIndex ? 'bg-[#17616E] w-8' : 'bg-white/60'}`}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Book Your Cleaning Section */}
-          <div className="font-bayon text-center space-y-8 p-8 ">
+          <div className=" font-bayon text-center space-y-8 p-8 ">
             <h2 className="text-2xl md:text-5xl font-bold text-[#2B6B6B] uppercase leading-tight">
               BOOK YOUR<br />CLEANING
             </h2>
@@ -269,6 +401,62 @@ function WindowCleaningPage() {
           </div>
         </div>
       </div>
+
+      {/* Lightbox modal */}
+      {lightboxOpen && (
+        <div
+          ref={overlayRef}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4"
+          onMouseDown={(e) => { if (e.target === overlayRef.current) closeLightbox(); }}
+          onTouchStart={onOverlayPointerDown}
+          onTouchMove={onOverlayPointerMove}
+          onTouchEnd={onOverlayPointerUp}
+        >
+          <div className="relative w-full max-w-5xl max-h-full">
+            {/* Close button */}
+            <button
+              onClick={closeLightbox}
+              className="absolute top-3 right-3 z-50 p-2 rounded bg-white/90 hover:bg-white"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+
+            {/* Prev/Next buttons */}
+            <button onClick={prevLightbox} className="absolute left-3 top-1/2 -translate-y-1/2 z-40 p-3 bg-white/90 rounded-full">‹</button>
+            <button onClick={nextLightbox} className="absolute right-3 top-1/2 -translate-y-1/2 z-40 p-3 bg-white/90 rounded-full">›</button>
+
+            {/* Zoom controls */}
+            <div className="absolute left-3 top-3 z-50 flex flex-col gap-2">
+              <button onClick={zoomIn} className="p-2 bg-white/90 rounded">+</button>
+              <button onClick={zoomOut} className="p-2 bg-white/90 rounded">-</button>
+            </div>
+
+            {/* Image viewport */}
+            <div
+              className="w-full h-[70vh] md:h-[80vh] bg-[#111] rounded-lg overflow-hidden flex items-center justify-center touch-pan-y: none"
+              onMouseDown={(e) => { e.preventDefault(); onOverlayPointerDown(e); }}
+              onMouseMove={(e) => { onOverlayPointerMove(e); }}
+              onMouseUp={(e) => { onOverlayPointerUp(e); }}
+              onWheel={onOverlayWheel}
+              onDoubleClick={() => { setZoom((z) => (z === 1 ? 2 : 1)); setOffset({ x: 0, y: 0 }); }}
+            >
+              <img
+                src={images[lightboxIndex]}
+                alt={`Lightbox ${lightboxIndex + 1}`}
+                draggable={false}
+                style={{
+                  transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
+                  transition: isPanningRef.current ? 'none' : 'transform 200ms',
+                  touchAction: 'none',
+                  maxWidth: 'none'
+                }}
+                className="max-h-full"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

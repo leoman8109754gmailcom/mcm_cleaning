@@ -12,10 +12,12 @@ import CommercialCln from './comcln.jsx'
 import ResidentialCleaningPage from './rescln.jsx'
 import ElectrostaticCleaningPage from './electcln.jsx'
 import AboutUsPage from './abtus.jsx'
+import ScrollToTop from './ScrollToTop.jsx'
 
 function App() {
   return (
     <ErrorBoundary>
+      <ScrollToTop />
       <Routes>
         <Route
           path="/"

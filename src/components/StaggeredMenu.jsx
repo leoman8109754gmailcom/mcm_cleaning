@@ -54,7 +54,7 @@ export default function StaggeredMenu({
 
             <nav className="flex flex-col gap-6">
               {/* Home link for easy navigation */}
-              <Link to="/" aria-label="Home" className="text-2xl font-bold hover:opacity-80" onClick={() => setOpen(false)}>
+              <Link to="/" aria-label="Home" className="text-2xl font-bayon font-light hover:opacity-80" onClick={() => setOpen(false)}>
                 Home
               </Link>
 
@@ -68,11 +68,11 @@ export default function StaggeredMenu({
                 );
 
                 return isInternal ? (
-                  <Link key={idx} to={it.link} aria-label={it.ariaLabel} className="text-2xl font-bold hover:opacity-80" onClick={() => setOpen(false)}>
+                  <Link key={idx} to={it.link} aria-label={it.ariaLabel} className="text-2xl font-bayon font-light hover:opacity-80" onClick={() => setOpen(false)}>
                     {content}
                   </Link>
                 ) : (
-                  <a key={idx} href={it.link} aria-label={it.ariaLabel} className="text-2xl font-bold hover:opacity-80" onClick={() => setOpen(false)}>
+                  <a key={idx} href={it.link} aria-label={it.ariaLabel} className="text-2xl font-bayon font-light hover:opacity-80" onClick={() => setOpen(false)}>
                     {content}
                   </a>
                 );

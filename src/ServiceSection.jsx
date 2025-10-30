@@ -1,5 +1,6 @@
 import React from 'react';
 import { gsap } from 'gsap';
+import { Link } from 'react-router-dom';
 import windowIMG from './assets/window.png';
 import commercialIMG from './assets/com.jpg';
 import residentialIMG from './assets/res.jpg';
@@ -10,6 +11,7 @@ function MenuItem({ link, text, image }) {
   const marqueeRef = React.useRef(null);
   const marqueeInnerRef = React.useRef(null);
   const animationDefaults = { duration: 0.6, ease: 'expo' };
+  const [isTouchDevice, setIsTouchDevice] = React.useState(false);
 
   const findClosestEdge = (mouseX, mouseY, width, height) => {
     const topEdgeDist = (mouseX - width / 2) ** 2 + mouseY ** 2;
@@ -38,32 +40,83 @@ function MenuItem({ link, text, image }) {
       .to(marqueeInnerRef.current, { y: edge === 'top' ? '101%' : '-101%' });
   };
 
-  const repeatedMarqueeContent = Array.from({ length: 10 }).map((_, idx) => (
-    <React.Fragment key={idx}>
-      <span className="text-[#EA892C] uppercase font-normal text-[4vh] leading-[1.2] p-[1vh_1vw_0]">{text}</span>
-      <div
-        className="w-[200px] h-[7vh] my-[2em] mx-[2vw] p-[1em_0] rounded-[50px] bg-cover bg-center"
-        style={{ backgroundImage: `url(${image})` }}
-      />
-    </React.Fragment>
-  ));
+  // detect touch / mobile devices so we can make the marquee visible by default
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const touch = ('ontouchstart' in window) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || window.matchMedia('(hover: none)').matches;
+    setIsTouchDevice(Boolean(touch));
+  }, []);
+
+  const isInternal = typeof link === 'string' && link.startsWith('/');
+
+  const repeatedMarqueeContent = Array.from({ length: 10 }).map((_, idx) => {
+    const content = (
+      <div key={`c-${idx}`} className="flex items-center gap-4 px-3">
+        <span className="text-[#EA892C] uppercase font-normal text-[4vh] leading-[1.2]">{text}</span>
+        <div className="w-20 md:w-[200px] h-12 md:h-[7vh] rounded-[10px] overflow-hidden bg-gray-200">
+          <img src={image} alt={text} className="w-full h-full object-cover block" />
+        </div>
+      </div>
+    );
+
+    // On touch devices make items tappable; on pointer devices keep them decorative to avoid hover/mouseleave jitter
+    if (isTouchDevice) {
+      return isInternal ? (
+        <Link key={`m-${idx}`} to={link} className="inline-block pointer-events-auto">
+          {content}
+        </Link>
+      ) : (
+        <a key={`m-${idx}`} href={link} className="inline-block pointer-events-auto">
+          {content}
+        </a>
+      );
+    }
+
+    return (
+      <div key={`m-${idx}`} className="inline-block pointer-events-none">
+        {content}
+      </div>
+    );
+  });
 
   return (
     <div className="flex-1 relative overflow-hidden text-center border-t-[0px] border-[#2B5F5F]" ref={itemRef}>
-      <a
-        className="font-bayon flex items-center justify-center h-full relative cursor-pointer uppercase no-underline font-bold text-[#EA892C] text-[4vh] tracking-wider hover:text-[#060010] focus:text-[#E8D4B8] focus-visible:text-[#060010] transition-colors"
-        href={link}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        {text}
-      </a>
+      {typeof link === 'string' && link.startsWith('/') ? (
+        <Link
+          className="font-bayon flex items-center justify-center h-full relative cursor-pointer uppercase no-underline font-bold text-[#EA892C] text-[4vh] tracking-wider hover:text-[#060010] focus:text-[#E8D4B8] focus-visible:text-[#060010] transition-colors"
+          to={link}
+          {...(!isTouchDevice ? { onMouseEnter: handleMouseEnter, onMouseLeave: handleMouseLeave } : {})}
+        >
+          {text}
+        </Link>
+      ) : (
+        <a
+          className="font-bayon flex items-center justify-center h-full relative cursor-pointer uppercase no-underline font-bold text-[#EA892C] text-[4vh] tracking-wider hover:text-[#060010] focus:text-[#E8D4B8] focus-visible:text-[#060010] transition-colors"
+          href={link}
+          {...(!isTouchDevice ? { onMouseEnter: handleMouseEnter, onMouseLeave: handleMouseLeave } : {})}
+        >
+          {text}
+        </a>
+      )}
       <div
-        className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none bg-white translate-y-[101%]"
+        className={`absolute top-0 left-0 w-full h-full overflow-hidden ${isTouchDevice ? 'pointer-events-auto translate-y-0' : 'pointer-events-none translate-y-[101%]'} bg-white`}
         ref={marqueeRef}
       >
         <div className="h-full w-[200%] flex" ref={marqueeInnerRef}>
-          <div className="flex items-center relative h-full w-[200%] will-change-transform animate-marquee">
+          <div
+            className="flex items-center relative h-full w-[200%] will-change-transform animate-marquee"
+            ref={marqueeInnerRef}
+            onTouchStart={() => {
+              try {
+                if (marqueeInnerRef.current) marqueeInnerRef.current.style.animationPlayState = 'paused';
+              } catch (e) {}
+            }}
+            onTouchEnd={() => {
+              try {
+                if (marqueeInnerRef.current) marqueeInnerRef.current.style.animationPlayState = 'running';
+              } catch (e) {}
+            }}
+          >
             {repeatedMarqueeContent}
           </div>
         </div>

@@ -12,6 +12,7 @@ import HeroIMG3 from './assets/res.jpg'
 const HeroSection = () => {
   const images = [HeroIMG, HeroIMG2, HeroIMG3];
   const [active, setActive] = React.useState(0);
+  const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     const prefersReduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -21,6 +22,13 @@ const HeroSection = () => {
     }, 3000); // change every 3 seconds
     return () => clearInterval(id);
   }, [images.length]);
+
+  // Mark mounted so we can avoid animating the initial paint.
+  React.useEffect(() => {
+    // setMounted on next tick so initial render shows the active image without transition
+    const t = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(t);
+  }, []);
 
   const prefersReduced = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -68,7 +76,7 @@ const HeroSection = () => {
               src={src}
               alt={`Hero ${i + 1}`}
               loading="lazy"
-              className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-linear ${i === active ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-cover object-center ${i === active ? 'opacity-100' : 'opacity-0'} ${mounted ? 'transition-opacity duration-1000 ease-linear' : ''}`}
             />
           ))}
         </div>
