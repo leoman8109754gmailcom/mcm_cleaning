@@ -11,11 +11,9 @@ This is a React-based marketing website for McKenna's Cleaning Services, a Medin
 - Tailwind CSS for styling
 - GSAP for animations
 - React Router for navigation
-- Supabase for backend (optional)
 
 **Deployment:**
-- Designed for serverless deployment (Netlify-style)
-- Includes serverless function for booking submissions
+- Designed for static deployment (Netlify, Vercel, etc.)
 
 ## Development Commands
 
@@ -34,10 +32,6 @@ npm run preview
 
 # Run linter
 npm run lint
-
-# Test serverless functions locally (requires Netlify CLI)
-npm i -g netlify-cli
-netlify dev
 ```
 
 ## Architecture & Structure
@@ -110,29 +104,6 @@ No global state management library is used. Component-local state with `React.us
 - Focus states on links and buttons
 - Respects prefers-reduced-motion preference
 - Click-outside handler for mobile menu
-
-## Serverless Backend
-
-**Location:** `netlify/functions/submit-booking.js` (if present)
-
-**Behavior:**
-- Accepts POST requests with booking data: `{ name, phone, service, date, notes }`
-- Sends email via SendGrid if `SENDGRID_API_KEY` is configured
-- Falls back to `/tmp/bookings.json` for local testing
-
-**Environment Variables:**
-- `SENDGRID_API_KEY` - SendGrid API key (optional)
-- `NOTIFY_EMAIL` - Email recipient for bookings (default: owner@example.com)
-- `FROM_EMAIL` - Sender email address (default: no-reply@example.com)
-- `VITE_SUPABASE_URL` - Supabase project URL (if using Supabase)
-- `VITE_SUPABASE_ANON_KEY` - Supabase anon key (if using Supabase)
-- `SUPABASE_URL` - Server-side Supabase URL
-- `SUPABASE_SERVICE_ROLE_KEY` - Server-side Supabase service key (keep secret!)
-
-**Security Notes:**
-- Never commit API keys or service role keys to git
-- Use `.env` file locally (already in .gitignore)
-- Use deployment platform's environment variable settings for production
 
 ## Key Implementation Details
 

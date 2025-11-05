@@ -5,9 +5,6 @@
   # Directory where build output is placed (Vite default)
   publish = "dist"
 
-  # Directory containing serverless functions
-  functions = "netlify/functions"
-
 # Redirects and rewrites
 [[redirects]]
   # SPA fallback - redirect all routes to index.html for client-side routing
@@ -40,12 +37,3 @@
   port = 5173
   targetPort = 5173
   autoLaunch = false
-
-# Environment variables (set these in Netlify UI, not here)
-# SENDGRID_API_KEY
-# NOTIFY_EMAIL
-# FROM_EMAIL
-# VITE_SUPABASE_URL
-# VITE_SUPABASE_ANON_KEY
-# SUPABASE_URL
-# SUPABASE_SERVICE_ROLE_KEY
