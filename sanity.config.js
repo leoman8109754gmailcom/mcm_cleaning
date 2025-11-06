@@ -57,9 +57,43 @@ export default defineConfig({
                   .documentId('hero')
               ),
             S.divider(),
+            // Service pages (singletons)
+            S.listItem()
+              .title('Window Service')
+              .id('windowService')
+              .child(
+                S.document()
+                  .schemaType('windowService')
+                  .documentId('windowService')
+              ),
+            S.listItem()
+              .title('Commercial Service')
+              .id('commercialService')
+              .child(
+                S.document()
+                  .schemaType('commercialService')
+                  .documentId('commercialService')
+              ),
+            S.listItem()
+              .title('Residential Service')
+              .id('residentialService')
+              .child(
+                S.document()
+                  .schemaType('residentialService')
+                  .documentId('residentialService')
+              ),
+            S.listItem()
+              .title('Electrostatic Service')
+              .id('electrostaticService')
+              .child(
+                S.document()
+                  .schemaType('electrostaticService')
+                  .documentId('electrostaticService')
+              ),
+            S.divider(),
             // Future content types will appear below
             ...S.documentTypeListItems().filter(
-              (item) => !['siteSettings', 'navigation', 'socialLinks', 'hero'].includes(item.getId())
+              (item) => !['siteSettings', 'navigation', 'socialLinks', 'hero', 'windowService', 'commercialService', 'residentialService', 'electrostaticService'].includes(item.getId())
             ),
           ]),
     }),

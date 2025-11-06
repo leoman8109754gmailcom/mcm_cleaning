@@ -110,6 +110,62 @@ export function useHero() {
 }
 
 /**
+ * React Query hook for window service
+ * @returns {object} React Query result with window service data
+ */
+export function useWindowService() {
+  return useQuery({
+    queryKey: ['windowService'],
+    queryFn: () => getContent('windowService'),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+  });
+}
+
+/**
+ * React Query hook for commercial service
+ * @returns {object} React Query result with commercial service data
+ */
+export function useCommercialService() {
+  return useQuery({
+    queryKey: ['commercialService'],
+    queryFn: () => getContent('commercialService'),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+  });
+}
+
+/**
+ * React Query hook for residential service
+ * @returns {object} React Query result with residential service data
+ */
+export function useResidentialService() {
+  return useQuery({
+    queryKey: ['residentialService'],
+    queryFn: () => getContent('residentialService'),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+  });
+}
+
+/**
+ * React Query hook for electrostatic service
+ * @returns {object} React Query result with electrostatic service data
+ */
+export function useElectrostaticService() {
+  return useQuery({
+    queryKey: ['electrostaticService'],
+    queryFn: () => getContent('electrostaticService'),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+  });
+}
+
+/**
  * Combined hook for all global data (useful for pages that need everything)
  * @returns {object} Object with all global data queries
  */

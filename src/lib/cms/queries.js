@@ -155,6 +155,178 @@ export const socialLinksQuery = {
   },
 };
 /**
+ * Query for window service
+ */
+export const windowServiceQuery = {
+  query: `*[_type == "windowService"][0] {
+    _id,
+    pageTitle,
+    description,
+    gallery[] {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt,
+      caption
+    },
+    carouselInterval
+  }`,
+  reformat: (data) => {
+    if (!data) return null;
+
+    return {
+      id: data._id,
+      pageTitle: data.pageTitle || 'Window Cleaning Services',
+      description: data.description || '',
+      gallery: (data.gallery || []).map((img) => ({
+        url: img.asset?.url,
+        alt: img.alt || 'Window cleaning image',
+        caption: img.caption || '',
+        width: img.asset?.metadata?.dimensions?.width,
+        height: img.asset?.metadata?.dimensions?.height,
+      })),
+      carouselInterval: data.carouselInterval || 3,
+    };
+  },
+};
+
+/**
+ * Query for commercial service
+ */
+export const commercialServiceQuery = {
+  query: `*[_type == "commercialService"][0] {
+    _id,
+    pageTitle,
+    description,
+    gallery[] {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt,
+      caption
+    },
+    carouselInterval
+  }`,
+  reformat: (data) => {
+    if (!data) return null;
+
+    return {
+      id: data._id,
+      pageTitle: data.pageTitle || 'Commercial Cleaning Services',
+      description: data.description || '',
+      gallery: (data.gallery || []).map((img) => ({
+        url: img.asset?.url,
+        alt: img.alt || 'Commercial cleaning image',
+        caption: img.caption || '',
+        width: img.asset?.metadata?.dimensions?.width,
+        height: img.asset?.metadata?.dimensions?.height,
+      })),
+      carouselInterval: data.carouselInterval || 3,
+    };
+  },
+};
+
+/**
+ * Query for residential service
+ */
+export const residentialServiceQuery = {
+  query: `*[_type == "residentialService"][0] {
+    _id,
+    pageTitle,
+    description,
+    gallery[] {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt,
+      caption
+    },
+    carouselInterval
+  }`,
+  reformat: (data) => {
+    if (!data) return null;
+
+    return {
+      id: data._id,
+      pageTitle: data.pageTitle || 'Residential Cleaning Services',
+      description: data.description || '',
+      gallery: (data.gallery || []).map((img) => ({
+        url: img.asset?.url,
+        alt: img.alt || 'Residential cleaning image',
+        caption: img.caption || '',
+        width: img.asset?.metadata?.dimensions?.width,
+        height: img.asset?.metadata?.dimensions?.height,
+      })),
+      carouselInterval: data.carouselInterval || 3,
+    };
+  },
+};
+
+/**
+ * Query for electrostatic service
+ */
+export const electrostaticServiceQuery = {
+  query: `*[_type == "electrostaticService"][0] {
+    _id,
+    pageTitle,
+    description,
+    gallery[] {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt,
+      caption
+    },
+    carouselInterval
+  }`,
+  reformat: (data) => {
+    if (!data) return null;
+
+    return {
+      id: data._id,
+      pageTitle: data.pageTitle || 'Electrostatic Cleaning Services',
+      description: data.description || '',
+      gallery: (data.gallery || []).map((img) => ({
+        url: img.asset?.url,
+        alt: img.alt || 'Electrostatic cleaning image',
+        caption: img.caption || '',
+        width: img.asset?.metadata?.dimensions?.width,
+        height: img.asset?.metadata?.dimensions?.height,
+      })),
+      carouselInterval: data.carouselInterval || 3,
+    };
+  },
+};
+
+/**
  * Export all queries as a single object for easy access
  */
 export const queries = {
@@ -162,6 +334,10 @@ export const queries = {
   navigation: navigationQuery,
   socialLinks: socialLinksQuery,
   hero: heroQuery,
+  windowService: windowServiceQuery,
+  commercialService: commercialServiceQuery,
+  residentialService: residentialServiceQuery,
+  electrostaticService: electrostaticServiceQuery,
 };
 
 export default queries;
