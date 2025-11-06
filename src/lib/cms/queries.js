@@ -83,6 +83,53 @@ export const navigationQuery = {
 };
 
 /**
+ * Query for hero section
+ */
+export const heroQuery = {
+  query: `*[_type == "hero"][0] {
+    _id,
+    title,
+    description,
+    ctaText,
+    ctaLink,
+    carouselImages[] {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt,
+      caption
+    },
+    carouselInterval
+  }`,
+  reformat: (data) => {
+    if (!data) return null;
+
+    return {
+      id: data._id,
+      title: data.title || "MCKENNA'S CLEANING SERVICES",
+      description: data.description || '',
+      ctaText: data.ctaText || 'CONTACT',
+      ctaLink: data.ctaLink || '#contact',
+      carouselImages: (data.carouselImages || []).map((img) => ({
+        url: img.asset?.url,
+        alt: img.alt || 'Hero image',
+        caption: img.caption || '',
+        width: img.asset?.metadata?.dimensions?.width,
+        height: img.asset?.metadata?.dimensions?.height,
+      })),
+      carouselInterval: data.carouselInterval || 3,
+    };
+  },
+};
+
+/**
  * Query for social media links
  */
 export const socialLinksQuery = {
@@ -107,7 +154,6 @@ export const socialLinksQuery = {
     };
   },
 };
-
 /**
  * Export all queries as a single object for easy access
  */
@@ -115,6 +161,7 @@ export const queries = {
   siteSettings: siteSettingsQuery,
   navigation: navigationQuery,
   socialLinks: socialLinksQuery,
+  hero: heroQuery,
 };
 
 export default queries;

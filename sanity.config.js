@@ -48,10 +48,18 @@ export default defineConfig({
                   .schemaType('socialLinks')
                   .documentId('socialLinks')
               ),
+            S.listItem()
+              .title('Hero Section')
+              .id('hero')
+              .child(
+                S.document()
+                  .schemaType('hero')
+                  .documentId('hero')
+              ),
             S.divider(),
             // Future content types will appear below
             ...S.documentTypeListItems().filter(
-              (item) => !['siteSettings', 'navigation', 'socialLinks'].includes(item.getId())
+              (item) => !['siteSettings', 'navigation', 'socialLinks', 'hero'].includes(item.getId())
             ),
           ]),
     }),

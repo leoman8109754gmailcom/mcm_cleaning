@@ -7,9 +7,11 @@
 import siteSettings from './siteSettings';
 import navigation from './navigation';
 import socialLinks from './socialLinks';
+import hero from './hero';
 
 export const schemaTypes = [
   siteSettings,
   navigation,
   socialLinks,
+  hero,
 ];

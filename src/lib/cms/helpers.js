@@ -96,6 +96,20 @@ export function useSocialLinks() {
 }
 
 /**
+ * React Query hook for hero section
+ * @returns {object} React Query result with hero data
+ */
+export function useHero() {
+  return useQuery({
+    queryKey: ['hero'],
+    queryFn: () => getContent('hero'),
+    staleTime: 999 * 60 * 5, // 5 minutes
+    cacheTime: 999 * 60 * 30, // 30 minutes
+    retry: 1,
+  });
+}
+
+/**
  * Combined hook for all global data (useful for pages that need everything)
  * @returns {object} Object with all global data queries
  */

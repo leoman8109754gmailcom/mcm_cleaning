@@ -9,7 +9,7 @@ import { createClient } from '@sanity/client';
 
 // Initialize Sanity client with environment variables
 export const sanityClient = createClient({
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || "6q20c2o5",
   dataset: import.meta.env.VITE_SANITY_DATASET || 'production',
   apiVersion: import.meta.env.VITE_SANITY_API_VERSION || '2024-01-01',
   useCdn: true, // Use CDN for faster response times (set to false for real-time data)
