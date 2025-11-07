@@ -56,6 +56,14 @@ export default defineConfig({
                   .schemaType('hero')
                   .documentId('hero')
               ),
+            S.listItem()
+              .title('About Us Page')
+              .id('aboutUs')
+              .child(
+                S.document()
+                  .schemaType('aboutUs')
+                  .documentId('aboutUs')
+              ),
             S.divider(),
             // Service pages (singletons)
             S.listItem()
@@ -103,7 +111,7 @@ export default defineConfig({
             S.divider(),
             // Future content types will appear below
             ...S.documentTypeListItems().filter(
-              (item) => !['siteSettings', 'navigation', 'socialLinks', 'hero', 'windowService', 'commercialService', 'residentialService', 'electrostaticService', 'testimonial'].includes(item.getId())
+              (item) => !['siteSettings', 'navigation', 'socialLinks', 'hero', 'aboutUs', 'windowService', 'commercialService', 'residentialService', 'electrostaticService', 'testimonial'].includes(item.getId())
             ),
           ]),
     }),

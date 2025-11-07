@@ -180,6 +180,20 @@ export function useTestimonials() {
 }
 
 /**
+ * React Query hook for About Us page
+ * @returns {object} React Query result with About Us data
+ */
+export function useAboutUs() {
+  return useQuery({
+    queryKey: ['aboutUs'],
+    queryFn: () => getContent('aboutUs'),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+  });
+}
+
+/**
  * Combined hook for all global data (useful for pages that need everything)
  * @returns {object} Object with all global data queries
  */

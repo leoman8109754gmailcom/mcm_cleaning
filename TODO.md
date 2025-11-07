@@ -65,6 +65,21 @@
 - [x] Replace hardcoded Lorem ipsum with CMS testimonials (with fallback support)
 - [x] Update Sanity Studio config with testimonials collection
 
+### Phase 6: About Us Page
+- [x] Create **About Us Schema**:
+  - [x] Page title
+  - [x] Hero image
+  - [x] Company statement (bold purpose statement)
+  - [x] Experience statement
+  - [x] "What We Do" section (title + content)
+  - [x] "Our Services" section (title + content)
+  - [x] Bottom image gallery with carousel
+  - [x] Carousel interval setting
+- [x] Add aboutUs query and useAboutUs hook
+- [x] Integrate AboutUsPage component with CMS data
+- [x] Update Sanity Studio config with About Us singleton
+- [x] All content fields support CMS data with fallback to hardcoded values
+
 ---
 
 ## 🚧 In Progress
@@ -74,15 +89,6 @@ Nothing currently in progress.
 ---
 
 ## 📋 Planned
-
-### Phase 6: About Us Page
-- [ ] Create **About Us Schema**:
-  - [ ] Page title
-  - [ ] Main content/description
-  - [ ] Team section (optional)
-  - [ ] Mission statement
-  - [ ] Image gallery
-- [ ] Integrate AboutUsPage component with CMS
 
 ### Phase 7: SEO & Metadata
 - [ ] Add SEO fields to existing schemas:
@@ -112,7 +118,7 @@ Nothing currently in progress.
 | **Hero Section** | ✅ Complete | Title, description, carousel images, CTA |
 | **Services** | ✅ Complete | Individual service page content (4 singleton schemas) |
 | **Reviews/Testimonials** | ✅ Complete | Customer reviews with ratings, photos, display order |
-| **About Us** | 📋 Planned | - |
+| **About Us** | ✅ Complete | All page content, hero image, statements, gallery |
 | **SEO/Meta** | 📋 Planned | - |
 
 ---
@@ -140,5 +146,5 @@ Nothing currently in progress.
 
 ---
 
-**Last Updated:** 2025-11-05
-**Current Phase:** Phase 6 - About Us Page (Next Up)
+**Last Updated:** 2025-11-06
+**Current Phase:** Phase 7 - SEO & Metadata (Next Up)

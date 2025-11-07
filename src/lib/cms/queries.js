@@ -327,6 +327,72 @@ export const electrostaticServiceQuery = {
 };
 
 /**
+ * Query for About Us page
+ */
+export const aboutUsQuery = {
+  query: `*[_type == "aboutUs"][0] {
+    _id,
+    pageTitle,
+    heroImage {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt
+    },
+    companyStatement,
+    experienceStatement,
+    whatWeDoTitle,
+    whatWeDoContent,
+    ourServicesTitle,
+    ourServicesContent,
+    gallery[] {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt
+    },
+    carouselInterval
+  }`,
+  reformat: (data) => {
+    if (!data) return null;
+
+    return {
+      id: data._id,
+      pageTitle: data.pageTitle || 'ABOUT US.',
+      heroImage: data.heroImage?.asset?.url || null,
+      heroImageAlt: data.heroImage?.alt || 'About McKenna\'s Cleaning',
+      companyStatement: data.companyStatement || 'McKenna\'s Cleaning is a company with the clear purpose of leaving your windows, houses, and offices SPOTLESS.',
+      experienceStatement: data.experienceStatement || 'With years of experience that guarantees we can offer you the best service.',
+      whatWeDoTitle: data.whatWeDoTitle || 'What We Do?',
+      whatWeDoContent: data.whatWeDoContent || 'We are a cleaning company established in _____ prepared to tackle your cleaning needs',
+      ourServicesTitle: data.ourServicesTitle || 'Our Services?',
+      ourServicesContent: data.ourServicesContent || 'We offer Residential, Commercial, and Window Cleaning plus Electrostatic Disinfectant Spraying',
+      gallery: (data.gallery || []).map((img) => ({
+        url: img.asset?.url,
+        alt: img.alt || 'Gallery image',
+        width: img.asset?.metadata?.dimensions?.width,
+        height: img.asset?.metadata?.dimensions?.height,
+      })),
+      carouselInterval: data.carouselInterval || 4,
+    };
+  },
+};
+
+/**
  * Query for testimonials
  */
 export const testimonialsQuery = {
@@ -382,6 +448,7 @@ export const queries = {
   residentialService: residentialServiceQuery,
   electrostaticService: electrostaticServiceQuery,
   testimonials: testimonialsQuery,
+  aboutUs: aboutUsQuery,
 };
 
 export default queries;

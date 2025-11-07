@@ -13,6 +13,7 @@ import commercialService from './commercialService';
 import residentialService from './residentialService';
 import electrostaticService from './electrostaticService';
 import testimonial from './testimonial';
+import aboutUs from './aboutUs';
 
 export const schemaTypes = [
   siteSettings,
@@ -24,4 +25,5 @@ export const schemaTypes = [
   residentialService,
   electrostaticService,
   testimonial,
+  aboutUs,
 ];

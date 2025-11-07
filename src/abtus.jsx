@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAboutUs } from './lib/cms/helpers';
 import windowIMG from './assets/window.png';
 import cleanIMG from './assets/clean.png';
 import commercialIMG from './assets/com.jpg';
@@ -6,16 +7,21 @@ import residentialIMG from './assets/res.jpg';
 import staticIMG from './assets/static.jpg';
 
 function AboutUsPage() {
+  // Fetch CMS data
+  const { data: aboutData, isLoading, isError } = useAboutUs();
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Sample images - replace with your actual images
-  const images = [
-    windowIMG,
-    cleanIMG,
-    commercialIMG,
-    residentialIMG,
-    windowIMG,
-  ];
+  // Use CMS gallery images if available, otherwise fallback to local assets
+  const fallbackImages = [windowIMG, cleanIMG, commercialIMG, residentialIMG, windowIMG];
+  const images = aboutData?.gallery?.length > 0
+    ? aboutData.gallery.map(img => img.url).filter(Boolean)
+    : fallbackImages;
+
+  // Use CMS carousel interval if available, otherwise fallback to 4000ms
+  const carouselInterval = aboutData?.carouselInterval
+    ? aboutData.carouselInterval * 1000
+    : 4000;
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % images.length);
@@ -32,25 +38,25 @@ function AboutUsPage() {
     if (isPaused) return undefined;
     const id = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 4000);
+    }, carouselInterval);
     return () => clearInterval(id);
-  }, [isPaused, images.length]);
+  }, [isPaused, images.length, carouselInterval]);
 
   return (
     // add extra top padding to account for the fixed nav and reduce overlap
     <section className="w-full min-h-screen bg-[#FFEBD0] pt-28 md:pt-32 pb-12 px-6 md:px-8">
       <div className="max-w-6xl mx-auto">
-        
+
         {/* Title */}
         <h1 className="font-bayon text-5xl md:text-6xl font-bold text-[#2B6B6B] mb-12 scroll-mt-28">
-          ABOUT US.
+          {aboutData?.pageTitle || 'ABOUT US.'}
         </h1>
 
         {/* Main Image */}
           <div className="bg-[#D1D1D1] rounded-3xl mb-8 overflow-hidden min-h-[300px]">
             <img
-              src={staticIMG}
-              alt="About McKenna's Cleaning"
+              src={aboutData?.heroImage || staticIMG}
+              alt={aboutData?.heroImageAlt || "About McKenna's Cleaning"}
               className="w-full h-[300px] md:h-[420px] object-cover block"
             />
           </div>
@@ -60,38 +66,38 @@ function AboutUsPage() {
           {/* Left boxed paragraph */}
             <div className="md:col-span-2 text-2xl md:text-3xl text-[#2B6B6B] leading-relaxed font-bayon">
             <p className="text-2xl md:text-3xl font-bold leading-relaxed">
-              McKenna's Cleaning is a company with the clear purpose of leaving your windows, houses, and offices SPOTLESS.
+              {aboutData?.companyStatement || "McKenna's Cleaning is a company with the clear purpose of leaving your windows, houses, and offices SPOTLESS."}
             </p>
           </div>
 
           {/* Right paragraph (aligned right on desktop) */}
             <div className="md:col-span-1 flex items-center">
             <p className="text-xl md:text-xl text-[#2B6B6B] font-extralight leading-relaxed font-bayon">
-              With years of experience that guarantees we can offer you the best service.
+              {aboutData?.experienceStatement || "With years of experience that guarantees we can offer you the best service."}
             </p>
           </div>
         </div>
 
         {/* Two Column Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          
+
           {/* What We Do Column */}
           <div>
             <h2 className="font-bayon text-3xl md:text-4xl font-bold text-[#2B6B6B] mb-6">
-              What We Do?
+              {aboutData?.whatWeDoTitle || 'What We Do?'}
             </h2>
             <p className="font-bayon text-lg md:text-xl text-[#F39237] leading-relaxed">
-              We are a cleaning company established in _____ prepared to tackle your cleaning needs
+              {aboutData?.whatWeDoContent || 'We are a cleaning company established in _____ prepared to tackle your cleaning needs'}
             </p>
           </div>
 
           {/* Our Services Column */}
           <div className="font-bayon">
             <h2 className="font-bayon text-3xl md:text-4xl font-bold text-[#2B6B6B] mb-6">
-              Our Services?
+              {aboutData?.ourServicesTitle || 'Our Services?'}
             </h2>
             <p className="text-lg md:text-xl text-[#F39237] leading-relaxed">
-              We offer Resdential, Commercial, and Window Cleaning plus Electrostatic Disinfectant Spraying
+              {aboutData?.ourServicesContent || 'We offer Residential, Commercial, and Window Cleaning plus Electrostatic Disinfectant Spraying'}
             </p>
           </div>
 
@@ -111,15 +117,18 @@ function AboutUsPage() {
                 transition: 'transform 600ms cubic-bezier(.22,.9,.31,1)'
               }}
             >
-              {images.map((src, idx) => (
-                <div key={idx} className="flex-shrink-0 w-full flex items-center justify-center min-h-[350px] overflow-hidden">
-                  <img
-                    src={src}
-                    alt={`Gallery image ${idx + 1}`}
-                    className="w-full h-[350px] md:h-[420px] object-cover block"
-                  />
-                </div>
-              ))}
+              {images.map((src, idx) => {
+                const altText = aboutData?.gallery?.[idx]?.alt || `Gallery image ${idx + 1}`;
+                return (
+                  <div key={idx} className="flex-shrink-0 w-full flex items-center justify-center min-h-[350px] overflow-hidden">
+                    <img
+                      src={src}
+                      alt={altText}
+                      className="w-full h-[350px] md:h-[420px] object-cover block"
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
 
