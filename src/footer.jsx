@@ -1,5 +1,6 @@
 import React from 'react';
 import Logo from './assets/brand-logo.png';
+import { Link } from 'react-router-dom';
 import { useSiteSettings, useSocialLinks } from './lib/cms/helpers';
 import { LoadingSkeleton } from './components/LoadingSpinner';
 
@@ -113,7 +114,7 @@ function Footer() {
               Book Your<br />Cleaning Here
             </h3>
             <a 
-              href="#contact"
+              href="/contact"
               className="font-bayon bg-[#17616E] text-[#EA892C] px-10 py-4 rounded-lg text-2xl font-medium hover:bg-[#144848] transition-colors uppercase tracking-wide"
             >
               CONTACT
@@ -128,6 +129,7 @@ function Footer() {
             © {new Date().getFullYear()} {companyName}. All rights reserved.
           </p>
         </div>
+        <p className="text-gray-600 text-sm m-2"><Link to="/structure"> Site CMS  </Link></p>
       </div>
     </footer>
   );

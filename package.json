@@ -12,11 +12,14 @@
   "dependencies": {
     "@sanity/client": "^7.12.1",
     "@sanity/image-url": "^1.2.0",
+    "@sanity/schema": "^4.14.1",
+    "@sanity/types": "^4.14.1",
     "@sanity/vision": "^4.13.0",
     "@tanstack/react-query": "^5.90.6",
     "gsap": "^3.13.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-helmet-async": "^2.0.5",
     "react-router-dom": "^6.14.1",
     "sanity": "^4.3.0",
     "styled-components": "^6.1.19"

@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import SEO from './components/SEO';
+import { useWindowService } from './lib/cms/helpers';
 import windowIMG from './assets/window.png';
 import cleanIMG from './assets/clean.png';
 import commercialIMG from './assets/com.jpg';
 import residentialIMG from './assets/res.jpg';
 
 function WindowCleaningPage() {
+  // Fetch CMS data
+  const { data: serviceData, isLoading, isError } = useWindowService();
+
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   // responsive visible count: 1 on small screens, 3 on md and up
   const [visibleCount, setVisibleCount] = useState(() => (typeof window !== 'undefined' && window.innerWidth >= 768 ? 3 : 1));
@@ -27,14 +32,16 @@ function WindowCleaningPage() {
   const [isDraggingState, setIsDraggingState] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Use local project assets for the carousel
-  // NOTE: removed the trailing duplicate here — cloned slides are added later when needed.
-  const images = [
-    windowIMG,
-    cleanIMG,
-    commercialIMG,
-    residentialIMG,
-  ];
+  // Use CMS gallery images if available, otherwise fallback to local assets
+  const fallbackImages = [windowIMG, cleanIMG, commercialIMG, residentialIMG];
+  const images = serviceData?.gallery?.length > 0
+    ? serviceData.gallery.map(img => img.url).filter(Boolean)
+    : fallbackImages;
+
+  // Use CMS carousel interval if available, otherwise fallback to 4000ms
+  const carouselInterval = serviceData?.carouselInterval
+    ? serviceData.carouselInterval * 1000
+    : 4000;
 
   const onTouchStart = (e) => {
     if (!e.touches || e.touches.length === 0) return;
@@ -101,9 +108,9 @@ function WindowCleaningPage() {
     if (isPaused) return undefined;
     const id = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % images.length);
-    }, 4000);
+    }, carouselInterval);
     return () => clearInterval(id);
-  }, [isPaused, images.length]);
+  }, [isPaused, images.length, carouselInterval]);
 
   // Lightbox / Modal for enlarged images with zoom and pan
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -259,10 +266,18 @@ function WindowCleaningPage() {
 
   return (
     <section className="w-full min-h-screen bg-[#FFEBD0] relative overflow-hidden">
+      <SEO
+        title={serviceData?.seo?.metaTitle || serviceData?.pageTitle}
+        description={serviceData?.seo?.metaDescription || serviceData?.description}
+        ogImage={serviceData?.seo?.ogImage}
+        ogImageAlt={serviceData?.seo?.ogImageAlt}
+        keywords={serviceData?.seo?.keywords}
+        noIndex={serviceData?.seo?.noIndex}
+      />
   {/* Top Section with Title - add extra top padding so fixed nav doesn't overlap */}
   <div className="font-bayon relative pt-24 md:pt-28 pb-8">
         <h1 className=" text-3xl md:text-6xl font-bold text-center text-[#2B6B6B] uppercase tracking-wide">
-          Window CLEANING
+          {serviceData?.pageTitle || 'Window CLEANING'}
         </h1>
       </div>
 
@@ -287,8 +302,8 @@ function WindowCleaningPage() {
           <h2 className="text-2xl md:text-4xl font-bold text-[#F39237] mb-4">
             Description of the job
           </h2>
-          <p className="text-base md:text-xl text-[#F39237] leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetur<br className="hidden md:block" /> adipiscing elit.
+          <p className="text-base md:text-xl text-[#F39237] leading-relaxed whitespace-pre-line">
+            {serviceData?.description || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}
           </p>
         </div>
       </div>
@@ -337,18 +352,21 @@ function WindowCleaningPage() {
                   transition: isDraggingState ? 'none' : 'transform 600ms cubic-bezier(.22,.9,.31,1)'
                 }}
               >
-                  {images.map((src, idx) => (
-                    <div key={idx} className="flex-shrink-0 w-full flex items-center justify-center min-h-[350px] overflow-hidden p-4">
-                        <div className="inline-block rounded-xl overflow-hidden">
-                          <img
-                            src={src}
-                            alt={`Gallery image ${idx + 1}`}
-                            onClick={() => openLightbox(idx)}
-                            className="block max-w-full h-[350px] md:h-[420px] object-contain cursor-zoom-in"
-                          />
-                        </div>
-                    </div>
-                  ))}
+                  {images.map((src, idx) => {
+                    const altText = serviceData?.gallery?.[idx]?.alt || `Gallery image ${idx + 1}`;
+                    return (
+                      <div key={idx} className="flex-shrink-0 w-full flex items-center justify-center min-h-[350px] overflow-hidden p-4">
+                          <div className="inline-block rounded-xl overflow-hidden">
+                            <img
+                              src={src}
+                              alt={altText}
+                              onClick={() => openLightbox(idx)}
+                              className="block max-w-full h-[350px] md:h-[420px] object-contain cursor-zoom-in"
+                            />
+                          </div>
+                      </div>
+                    );
+                  })}
               </div>
             </div>
 
@@ -443,7 +461,7 @@ function WindowCleaningPage() {
             >
               <img
                 src={images[lightboxIndex]}
-                alt={`Lightbox ${lightboxIndex + 1}`}
+                alt={serviceData?.gallery?.[lightboxIndex]?.alt || `Lightbox ${lightboxIndex + 1}`}
                 draggable={false}
                 style={{
                   transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,

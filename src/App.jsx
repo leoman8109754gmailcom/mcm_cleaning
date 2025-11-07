@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { HelmetProvider } from 'react-helmet-async'
 import HeroSection from './HeroSection.jsx'
 import ServiceSection from './ServiceSection.jsx'
 import Reviews from './reviews.jsx'
@@ -13,6 +14,8 @@ import CommercialCln from './comcln.jsx'
 import ResidentialCleaningPage from './rescln.jsx'
 import ElectrostaticCleaningPage from './electcln.jsx'
 import AboutUsPage from './abtus.jsx'
+import ContactPage from './ContactPage.jsx'
+import ThankYouPage from './ThankYouPage.jsx'
 import ScrollToTop from './ScrollToTop.jsx'
 import StudioPage from './studio/StudioPage.jsx'
 
@@ -30,9 +33,10 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ErrorBoundary>
-        <ScrollToTop />
-        <Routes>
+      <HelmetProvider>
+        <ErrorBoundary>
+          <ScrollToTop />
+          <Routes>
           <Route
             path="/"
             element={
@@ -51,9 +55,12 @@ function App() {
           <Route path="/residential-cleaning" element={<><TopNav /><ResidentialCleaningPage /><Footer /></>} />
           <Route path="/electrostatic-cleaning" element={<><TopNav /><ElectrostaticCleaningPage /><Footer /></>} />
           <Route path="/about-us" element={<><TopNav /><AboutUsPage /><Footer /></>} />
-          <Route path="/admin/*" element={<StudioPage />} />
-        </Routes>
-      </ErrorBoundary>
+          <Route path="/contact" element={<><TopNav /><ContactPage /><Footer /></>} />
+          <Route path="/thank-you" element={<><TopNav /><ThankYouPage /><Footer /></>} />
+          <Route path="/structure" element={<StudioPage />} />
+          </Routes>
+        </ErrorBoundary>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }
