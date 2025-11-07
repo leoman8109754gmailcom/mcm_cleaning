@@ -53,7 +53,7 @@ function App() {
           <Route path="/residential-cleaning" element={<><TopNav /><ResidentialCleaningPage /><Footer /></>} />
           <Route path="/electrostatic-cleaning" element={<><TopNav /><ElectrostaticCleaningPage /><Footer /></>} />
           <Route path="/about-us" element={<><TopNav /><AboutUsPage /><Footer /></>} />
-          <Route path="/admin/*" element={<StudioPage />} />
+          <Route path="/structure/*" element={<StudioPage />} />
           </Routes>
         </ErrorBoundary>
       </HelmetProvider>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Logo from './assets/brand-logo.png';
+import { Link } from 'react-router-dom';
 import { useSiteSettings, useSocialLinks } from './lib/cms/helpers';
 import { LoadingSkeleton } from './components/LoadingSpinner';
 
@@ -128,6 +129,7 @@ function Footer() {
             © {new Date().getFullYear()} {companyName}. All rights reserved.
           </p>
         </div>
+        <p className="text-gray-600 text-sm m-2"><Link to="/structure"> Site CMS  </Link></p>
       </div>
     </footer>
   );
