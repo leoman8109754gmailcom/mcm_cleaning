@@ -61,7 +61,7 @@ export default function ContactPage() {
               name="contact"
               method="POST"
               data-netlify="true"
-              action="/thank-you"
+              action="/contact/thank-you"
               className="space-y-4"
             >
               {/* Hidden field for Netlify */}

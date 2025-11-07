@@ -56,7 +56,7 @@ function App() {
           <Route path="/electrostatic-cleaning" element={<><TopNav /><ElectrostaticCleaningPage /><Footer /></>} />
           <Route path="/about-us" element={<><TopNav /><AboutUsPage /><Footer /></>} />
           <Route path="/contact" element={<><TopNav /><ContactPage /><Footer /></>} />
-          <Route path="/thank-you" element={<><TopNav /><ThankYouPage /><Footer /></>} />
+          <Route path="/contact/thank-you" element={<><TopNav /><ThankYouPage /><Footer /></>} />
           <Route path="/structure" element={<StudioPage />} />
           </Routes>
         </ErrorBoundary>
