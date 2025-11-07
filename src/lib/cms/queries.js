@@ -327,6 +327,49 @@ export const electrostaticServiceQuery = {
 };
 
 /**
+ * Query for testimonials
+ */
+export const testimonialsQuery = {
+  query: `*[_type == "testimonial" && disabled != true] | order(displayOrder asc, _createdAt desc) {
+    _id,
+    customerName,
+    reviewText,
+    rating,
+    reviewDate,
+    customerPhoto {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt
+    },
+    role,
+    displayOrder
+  }`,
+  reformat: (data) => {
+    if (!data || !Array.isArray(data)) return [];
+
+    return data.map((testimonial) => ({
+      id: testimonial._id,
+      customerName: testimonial.customerName || 'Anonymous',
+      text: testimonial.reviewText || '',
+      rating: testimonial.rating || 5,
+      date: testimonial.reviewDate || null,
+      photo: testimonial.customerPhoto?.asset?.url || null,
+      photoAlt: testimonial.customerPhoto?.alt || testimonial.customerName || 'Customer',
+      role: testimonial.role || '',
+      displayOrder: testimonial.displayOrder || 100,
+    }));
+  },
+};
+
+/**
  * Export all queries as a single object for easy access
  */
 export const queries = {
@@ -338,6 +381,7 @@ export const queries = {
   commercialService: commercialServiceQuery,
   residentialService: residentialServiceQuery,
   electrostaticService: electrostaticServiceQuery,
+  testimonials: testimonialsQuery,
 };
 
 export default queries;

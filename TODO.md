@@ -49,22 +49,27 @@
 - [x] Individual routes maintained (/windowser, /commercial-cleaning, /residential-cleaning, /electrostatic-cleaning)
 - [x] Update Sanity Studio structure to include all 4 service singletons
 - [x] All service pages support CMS data with fallback to hardcoded values
+### Phase 5: Testimonials/Reviews
+- [x] Create **Testimonial Schema**:
+  - [x] Customer name
+  - [x] Review text
+  - [x] Rating (stars)
+  - [x] Date
+  - [x] Optional customer photo
+  - [x] Customer role/title
+  - [x] Display order
+  - [x] Disabled toggle
+- [x] Add testimonial queries and hooks (testimonialsQuery, useTestimonials)
+- [x] Integrate Reviews component with CMS data
+- [x] Add star rating display to testimonials
+- [x] Replace hardcoded Lorem ipsum with CMS testimonials (with fallback support)
+- [x] Update Sanity Studio config with testimonials collection
+
 ---
 
 ## 🚧 In Progress
 
-### Phase 5: Testimonials/Reviews (NEXT UP)
-- [ ] Create **Testimonial Schema**:
-  - [ ] Customer name
-  - [ ] Review text
-  - [ ] Rating (stars)
-  - [ ] Date
-  - [ ] Optional customer photo
-  - [ ] Display order
-  - [ ] Disabled toggle
-- [ ] Add testimonial queries and hooks
-- [ ] Integrate Reviews component with CMS
-- [ ] Replace hardcoded Lorem ipsum testimonials
+Nothing currently in progress.
 
 ---
 
@@ -106,7 +111,7 @@
 | **Navigation** | ✅ Complete | Nav links, social links, hide/show items |
 | **Hero Section** | ✅ Complete | Title, description, carousel images, CTA |
 | **Services** | ✅ Complete | Individual service page content (4 singleton schemas) |
-| **Reviews/Testimonials** | ⏳ Next | - |
+| **Reviews/Testimonials** | ✅ Complete | Customer reviews with ratings, photos, display order |
 | **About Us** | 📋 Planned | - |
 | **SEO/Meta** | 📋 Planned | - |
 
@@ -136,4 +141,4 @@
 ---
 
 **Last Updated:** 2025-11-05
-**Current Phase:** Phase 5 - Testimonials/Reviews
+**Current Phase:** Phase 6 - About Us Page (Next Up)

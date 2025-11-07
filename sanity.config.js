@@ -91,9 +91,19 @@ export default defineConfig({
                   .documentId('electrostaticService')
               ),
             S.divider(),
+            // Testimonials (collection)
+            S.listItem()
+              .title('Testimonials')
+              .schemaType('testimonial')
+              .child(
+                S.documentTypeList('testimonial')
+                  .title('Testimonials')
+                  .defaultOrdering([{ field: 'displayOrder', direction: 'asc' }])
+              ),
+            S.divider(),
             // Future content types will appear below
             ...S.documentTypeListItems().filter(
-              (item) => !['siteSettings', 'navigation', 'socialLinks', 'hero', 'windowService', 'commercialService', 'residentialService', 'electrostaticService'].includes(item.getId())
+              (item) => !['siteSettings', 'navigation', 'socialLinks', 'hero', 'windowService', 'commercialService', 'residentialService', 'electrostaticService', 'testimonial'].includes(item.getId())
             ),
           ]),
     }),

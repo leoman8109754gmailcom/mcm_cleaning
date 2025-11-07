@@ -166,6 +166,20 @@ export function useElectrostaticService() {
 }
 
 /**
+ * React Query hook for testimonials
+ * @returns {object} React Query result with testimonials data
+ */
+export function useTestimonials() {
+  return useQuery({
+    queryKey: ['testimonials'],
+    queryFn: () => getContent('testimonials'),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+  });
+}
+
+/**
  * Combined hook for all global data (useful for pages that need everything)
  * @returns {object} Object with all global data queries
  */
