@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SEO from './components/SEO';
 import { useElectrostaticService } from './lib/cms/helpers';
 import windowIMG from './assets/window.png';
 import cleanIMG from './assets/clean.png';
@@ -265,6 +266,14 @@ function ElectrostaticSprayingCleaningPage() {
 
   return (
     <section className="w-full min-h-screen bg-[#FFEBD0] relative overflow-hidden">
+      <SEO
+        title={serviceData?.seo?.metaTitle || serviceData?.pageTitle}
+        description={serviceData?.seo?.metaDescription || serviceData?.description}
+        ogImage={serviceData?.seo?.ogImage}
+        ogImageAlt={serviceData?.seo?.ogImageAlt}
+        keywords={serviceData?.seo?.keywords}
+        noIndex={serviceData?.seo?.noIndex}
+      />
   {/* Top Section with Title - add extra top padding so fixed nav doesn't overlap */}
   <div className="font-bayon relative pt-24 md:pt-28 pb-8">
         <h1 className=" text-3xl md:text-6xl font-bold text-center text-[#2B6B6B] uppercase tracking-wide">

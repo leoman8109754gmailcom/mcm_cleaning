@@ -4,6 +4,8 @@
  * Manages content for the electrostatic cleaning service page
  */
 
+import { seoFields } from './seoFields';
+
 export default {
   name: 'electrostaticService',
   type: 'document',
@@ -57,5 +59,6 @@ export default {
       initialValue: 3,
       validation: (Rule) => Rule.min(1).max(10),
     },
+    ...seoFields,
   ],
 };

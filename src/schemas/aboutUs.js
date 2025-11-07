@@ -4,6 +4,8 @@
  * Manages content for the About Us page
  */
 
+import { seoFields } from './seoFields';
+
 export default {
   name: 'aboutUs',
   type: 'document',
@@ -110,5 +112,6 @@ export default {
       initialValue: 4,
       validation: (Rule) => Rule.min(1).max(10),
     },
+    ...seoFields,
   ],
 };

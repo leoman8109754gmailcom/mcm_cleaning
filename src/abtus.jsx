@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SEO from './components/SEO';
 import { useAboutUs } from './lib/cms/helpers';
 import windowIMG from './assets/window.png';
 import cleanIMG from './assets/clean.png';
@@ -45,6 +46,14 @@ function AboutUsPage() {
   return (
     // add extra top padding to account for the fixed nav and reduce overlap
     <section className="w-full min-h-screen bg-[#FFEBD0] pt-28 md:pt-32 pb-12 px-6 md:px-8">
+      <SEO
+        title={aboutData?.seo?.metaTitle || aboutData?.pageTitle}
+        description={aboutData?.seo?.metaDescription || aboutData?.companyStatement}
+        ogImage={aboutData?.seo?.ogImage}
+        ogImageAlt={aboutData?.seo?.ogImageAlt}
+        keywords={aboutData?.seo?.keywords}
+        noIndex={aboutData?.seo?.noIndex}
+      />
       <div className="max-w-6xl mx-auto">
 
         {/* Title */}

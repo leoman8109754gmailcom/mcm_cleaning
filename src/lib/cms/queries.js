@@ -106,7 +106,26 @@ export const heroQuery = {
       alt,
       caption
     },
-    carouselInterval
+    carouselInterval,
+    seo {
+      metaTitle,
+      metaDescription,
+      ogImage {
+        asset->{
+          _id,
+          url,
+          metadata {
+            dimensions {
+              width,
+              height
+            }
+          }
+        },
+        alt
+      },
+      keywords,
+      noIndex
+    }
   }`,
   reformat: (data) => {
     if (!data) return null;
@@ -125,6 +144,14 @@ export const heroQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 3,
+      seo: {
+        metaTitle: data.seo?.metaTitle || null,
+        metaDescription: data.seo?.metaDescription || null,
+        ogImage: data.seo?.ogImage?.asset?.url || null,
+        ogImageAlt: data.seo?.ogImage?.alt || null,
+        keywords: data.seo?.keywords || [],
+        noIndex: data.seo?.noIndex || false,
+      },
     };
   },
 };
@@ -176,7 +203,26 @@ export const windowServiceQuery = {
       alt,
       caption
     },
-    carouselInterval
+    carouselInterval,
+    seo {
+      metaTitle,
+      metaDescription,
+      ogImage {
+        asset->{
+          _id,
+          url,
+          metadata {
+            dimensions {
+              width,
+              height
+            }
+          }
+        },
+        alt
+      },
+      keywords,
+      noIndex
+    }
   }`,
   reformat: (data) => {
     if (!data) return null;
@@ -193,6 +239,14 @@ export const windowServiceQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 3,
+      seo: {
+        metaTitle: data.seo?.metaTitle || null,
+        metaDescription: data.seo?.metaDescription || null,
+        ogImage: data.seo?.ogImage?.asset?.url || null,
+        ogImageAlt: data.seo?.ogImage?.alt || null,
+        keywords: data.seo?.keywords || [],
+        noIndex: data.seo?.noIndex || false,
+      },
     };
   },
 };
@@ -219,7 +273,26 @@ export const commercialServiceQuery = {
       alt,
       caption
     },
-    carouselInterval
+    carouselInterval,
+    seo {
+      metaTitle,
+      metaDescription,
+      ogImage {
+        asset->{
+          _id,
+          url,
+          metadata {
+            dimensions {
+              width,
+              height
+            }
+          }
+        },
+        alt
+      },
+      keywords,
+      noIndex
+    }
   }`,
   reformat: (data) => {
     if (!data) return null;
@@ -236,6 +309,14 @@ export const commercialServiceQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 3,
+      seo: {
+        metaTitle: data.seo?.metaTitle || null,
+        metaDescription: data.seo?.metaDescription || null,
+        ogImage: data.seo?.ogImage?.asset?.url || null,
+        ogImageAlt: data.seo?.ogImage?.alt || null,
+        keywords: data.seo?.keywords || [],
+        noIndex: data.seo?.noIndex || false,
+      },
     };
   },
 };
@@ -262,7 +343,26 @@ export const residentialServiceQuery = {
       alt,
       caption
     },
-    carouselInterval
+    carouselInterval,
+    seo {
+      metaTitle,
+      metaDescription,
+      ogImage {
+        asset->{
+          _id,
+          url,
+          metadata {
+            dimensions {
+              width,
+              height
+            }
+          }
+        },
+        alt
+      },
+      keywords,
+      noIndex
+    }
   }`,
   reformat: (data) => {
     if (!data) return null;
@@ -279,6 +379,14 @@ export const residentialServiceQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 3,
+      seo: {
+        metaTitle: data.seo?.metaTitle || null,
+        metaDescription: data.seo?.metaDescription || null,
+        ogImage: data.seo?.ogImage?.asset?.url || null,
+        ogImageAlt: data.seo?.ogImage?.alt || null,
+        keywords: data.seo?.keywords || [],
+        noIndex: data.seo?.noIndex || false,
+      },
     };
   },
 };
@@ -305,7 +413,26 @@ export const electrostaticServiceQuery = {
       alt,
       caption
     },
-    carouselInterval
+    carouselInterval,
+    seo {
+      metaTitle,
+      metaDescription,
+      ogImage {
+        asset->{
+          _id,
+          url,
+          metadata {
+            dimensions {
+              width,
+              height
+            }
+          }
+        },
+        alt
+      },
+      keywords,
+      noIndex
+    }
   }`,
   reformat: (data) => {
     if (!data) return null;
@@ -322,6 +449,14 @@ export const electrostaticServiceQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 3,
+      seo: {
+        metaTitle: data.seo?.metaTitle || null,
+        metaDescription: data.seo?.metaDescription || null,
+        ogImage: data.seo?.ogImage?.asset?.url || null,
+        ogImageAlt: data.seo?.ogImage?.alt || null,
+        keywords: data.seo?.keywords || [],
+        noIndex: data.seo?.noIndex || false,
+      },
     };
   },
 };
@@ -365,7 +500,26 @@ export const aboutUsQuery = {
       },
       alt
     },
-    carouselInterval
+    carouselInterval,
+    seo {
+      metaTitle,
+      metaDescription,
+      ogImage {
+        asset->{
+          _id,
+          url,
+          metadata {
+            dimensions {
+              width,
+              height
+            }
+          }
+        },
+        alt
+      },
+      keywords,
+      noIndex
+    }
   }`,
   reformat: (data) => {
     if (!data) return null;
@@ -388,6 +542,14 @@ export const aboutUsQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 4,
+      seo: {
+        metaTitle: data.seo?.metaTitle || null,
+        metaDescription: data.seo?.metaDescription || null,
+        ogImage: data.seo?.ogImage?.asset?.url || null,
+        ogImageAlt: data.seo?.ogImage?.alt || null,
+        keywords: data.seo?.keywords || [],
+        noIndex: data.seo?.noIndex || false,
+      },
     };
   },
 };

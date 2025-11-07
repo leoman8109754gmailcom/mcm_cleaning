@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import TopNav from './TopNav';
+import SEO from './components/SEO';
 import { useHero } from './lib/cms/helpers';
 import { LoadingSkeleton } from './components/LoadingSpinner';
 // GSAP is not used here anymore (menu animation moved to TopNav/StaggeredMenu)
@@ -54,6 +55,14 @@ const HeroSection = () => {
 
   return (
   <div id="hero" className="min-h-screen bg-[#FFEBD0] pt-24 px-4 pb-12 md:pt-28 md:px-8 lg:pb-16 lg:px-10 xl:pb-20">
+      <SEO
+        title={hero?.seo?.metaTitle || title}
+        description={hero?.seo?.metaDescription || description?.replace(/\n/g, ' ')}
+        ogImage={hero?.seo?.ogImage}
+        ogImageAlt={hero?.seo?.ogImageAlt}
+        keywords={hero?.seo?.keywords}
+        noIndex={hero?.seo?.noIndex}
+      />
       <TopNav />
 
       {/* Mobile menu is provided by `TopNav`; avoid rendering a duplicate here */}

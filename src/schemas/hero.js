@@ -5,6 +5,8 @@
  * description, CTA, and carousel images
  */
 
+import { seoFields } from './seoFields';
+
 export default {
   name: 'hero',
   title: 'Hero Section',
@@ -79,6 +81,7 @@ export default {
       initialValue: 3,
       validation: (Rule) => Rule.required().min(1).max(30),
     },
+    ...seoFields,
   ],
   preview: {
     select: {

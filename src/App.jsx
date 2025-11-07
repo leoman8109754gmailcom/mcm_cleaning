@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { HelmetProvider } from 'react-helmet-async'
 import HeroSection from './HeroSection.jsx'
 import ServiceSection from './ServiceSection.jsx'
 import Reviews from './reviews.jsx'
@@ -30,9 +31,10 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ErrorBoundary>
-        <ScrollToTop />
-        <Routes>
+      <HelmetProvider>
+        <ErrorBoundary>
+          <ScrollToTop />
+          <Routes>
           <Route
             path="/"
             element={
@@ -52,8 +54,9 @@ function App() {
           <Route path="/electrostatic-cleaning" element={<><TopNav /><ElectrostaticCleaningPage /><Footer /></>} />
           <Route path="/about-us" element={<><TopNav /><AboutUsPage /><Footer /></>} />
           <Route path="/admin/*" element={<StudioPage />} />
-        </Routes>
-      </ErrorBoundary>
+          </Routes>
+        </ErrorBoundary>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }
