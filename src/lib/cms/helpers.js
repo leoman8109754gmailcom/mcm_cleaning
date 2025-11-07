@@ -194,6 +194,20 @@ export function useAboutUs() {
 }
 
 /**
+ * React Query hook for Contact Page
+ * @returns {object} React Query result with Contact Page data
+ */
+export function useContactPage() {
+  return useQuery({
+    queryKey: ['contactPage'],
+    queryFn: () => getContent('contactPage'),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+  });
+}
+
+/**
  * Combined hook for all global data (useful for pages that need everything)
  * @returns {object} Object with all global data queries
  */

@@ -114,7 +114,7 @@ function Footer() {
               Book Your<br />Cleaning Here
             </h3>
             <a 
-              href="#contact"
+              href="/contact"
               className="font-bayon bg-[#17616E] text-[#EA892C] px-10 py-4 rounded-lg text-2xl font-medium hover:bg-[#144848] transition-colors uppercase tracking-wide"
             >
               CONTACT

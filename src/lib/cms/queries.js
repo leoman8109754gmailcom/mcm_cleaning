@@ -555,6 +555,67 @@ export const aboutUsQuery = {
 };
 
 /**
+ * Query for Contact Page
+ */
+export const contactPageQuery = {
+  query: `*[_type == "contactPage"][0] {
+    _id,
+    pageTitle,
+    description,
+    formHeading,
+    availabilityNotice,
+    blockedDates[] {
+      startDate,
+      endDate,
+      reason
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      ogImage {
+        asset->{
+          _id,
+          url,
+          metadata {
+            dimensions {
+              width,
+              height
+            }
+          }
+        },
+        alt
+      },
+      keywords,
+      noIndex
+    }
+  }`,
+  reformat: (data) => {
+    if (!data) return null;
+
+    return {
+      id: data._id,
+      pageTitle: data.pageTitle || 'Contact Us',
+      description: data.description || 'Ready to schedule your cleaning service? Fill out the form below and we\'ll get back to you within 24 hours.',
+      formHeading: data.formHeading || 'Request a Quote',
+      availabilityNotice: data.availabilityNotice || 'Please note: We are unavailable on the dates highlighted below.',
+      blockedDates: (data.blockedDates || []).map((dateRange) => ({
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        reason: dateRange.reason || null,
+      })),
+      seo: {
+        metaTitle: data.seo?.metaTitle || null,
+        metaDescription: data.seo?.metaDescription || null,
+        ogImage: data.seo?.ogImage?.asset?.url || null,
+        ogImageAlt: data.seo?.ogImage?.alt || null,
+        keywords: data.seo?.keywords || [],
+        noIndex: data.seo?.noIndex || false,
+      },
+    };
+  },
+};
+
+/**
  * Query for testimonials
  */
 export const testimonialsQuery = {
@@ -611,6 +672,7 @@ export const queries = {
   electrostaticService: electrostaticServiceQuery,
   testimonials: testimonialsQuery,
   aboutUs: aboutUsQuery,
+  contactPage: contactPageQuery,
 };
 
 export default queries;

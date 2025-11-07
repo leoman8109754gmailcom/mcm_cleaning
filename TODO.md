@@ -108,14 +108,48 @@ Nothing currently in progress.
   - [x] Electrostatic Service page
   - [x] About Us page
 
+### Phase 8: Contact Page & Forms
+- [x] Create Contact Page schema with:
+  - [x] Page title and description
+  - [x] Form heading
+  - [x] Blocked dates array (date ranges with optional reasons)
+  - [x] Availability notice text
+  - [x] SEO fields
+- [x] Create BlockedDatesCalendar component
+  - [x] Interactive calendar widget showing current + next 2 months
+  - [x] Highlight blocked date ranges
+  - [x] Hover tooltips for blocked date reasons
+  - [x] Month navigation
+- [x] Create ContactPage component
+  - [x] Netlify Forms integration (auto-submit)
+  - [x] Form fields: name, email, phone, service request, preferred date/time, message
+  - [x] Contact information display (from siteSettings)
+  - [x] Blocked dates calendar display
+  - [x] Responsive two-column layout
+- [x] Create ThankYouPage component
+  - [x] Success message and next steps
+  - [x] Links to homepage and other pages
+- [x] Add routes for /contact and /thank-you
+- [x] Configure Netlify Forms (auto-detected via data-netlify attribute)
+- [x] SEO integration for contact pages
+
+---
+
+## 🚧 In Progress
+
+Nothing currently in progress.
+
+---
+
+
+
 ---
 
 ## 📋 Planned
 
-### Phase 8: Additional Features (Nice to Have)
-- [ ] Availability Calendar for scheduling
+### Phase 9: Additional Features (Nice to Have)
+- [ ] Make contact form send an email or log to sanity cms 
 - [ ] Payment portal link to square
-- [ ] Contact form schema (if adding contact form)
 - [ ] Blog/News section (if needed)
 - [ ] Image optimization settings
 - [ ] Preview/Draft mode for content
@@ -134,6 +168,7 @@ Nothing currently in progress.
 | **Reviews/Testimonials** | ✅ Complete | Customer reviews with ratings, photos, display order |
 | **About Us** | ✅ Complete | All page content, hero image, statements, gallery |
 | **SEO/Meta** | ✅ Complete | Meta tags, OG images, keywords, noIndex for all pages |
+| **Contact Page** | ✅ Complete | Contact form, blocked dates calendar, Netlify Forms integration |
 
 ---
 
@@ -161,4 +196,4 @@ Nothing currently in progress.
 ---
 
 **Last Updated:** 2025-11-06
-**Current Phase:** Phase 8 - Additional Features (Optional)
+**Current Phase:** Phase 9 - Additional Features (Optional)

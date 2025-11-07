@@ -64,6 +64,14 @@ export default defineConfig({
                   .schemaType('aboutUs')
                   .documentId('aboutUs')
               ),
+            S.listItem()
+              .title('Contact Page')
+              .id('contactPage')
+              .child(
+                S.document()
+                  .schemaType('contactPage')
+                  .documentId('contactPage')
+              ),
             S.divider(),
             // Service pages (singletons)
             S.listItem()
@@ -111,7 +119,7 @@ export default defineConfig({
             S.divider(),
             // Future content types will appear below
             ...S.documentTypeListItems().filter(
-              (item) => !['siteSettings', 'navigation', 'socialLinks', 'hero', 'aboutUs', 'windowService', 'commercialService', 'residentialService', 'electrostaticService', 'testimonial'].includes(item.getId())
+              (item) => !['siteSettings', 'navigation', 'socialLinks', 'hero', 'aboutUs', 'contactPage', 'windowService', 'commercialService', 'residentialService', 'electrostaticService', 'testimonial'].includes(item.getId())
             ),
           ]),
     }),

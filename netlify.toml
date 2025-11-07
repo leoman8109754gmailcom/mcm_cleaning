@@ -5,6 +5,11 @@
   # Directory where build output is placed (Vite default)
   publish = "dist"
 
+# Netlify Forms
+# Forms are automatically detected via data-netlify="true" attribute
+# Contact form submissions will be available in Netlify dashboard
+# No additional configuration needed - Netlify handles it automatically
+
 # Redirects and rewrites
 [[redirects]]
   # SPA fallback - redirect all routes to index.html for client-side routing

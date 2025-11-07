@@ -105,7 +105,7 @@ export default function TopNav() {
             {item.label}
           </Link>
         ))}
-        <a href="#contact" className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg">CONTACT</a>
+        <a href="/contact" className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg">CONTACT</a>
       </div>
 
       {/* Mobile menu */}
