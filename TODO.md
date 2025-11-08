@@ -135,9 +135,25 @@ Nothing currently in progress.
 
 ---
 
+## 🚧 In Progress
+
+Nothing currently in progress.
+
+---
+
+
+
+---
+
 ## 📋 Planned
 
+### Phase 8.5 Add services section control
+- [ ] Add service link text, and link image to each service page schema in sanity
+- [ ] Add query for services section links and images and text
+- [ ] Modify services section with queried data and images instead of hardcoded data, have text placeholders, but not image placeholders
+
 ### Phase 9: Additional Features (Nice to Have)
+- [ ] Make contact form send an email or log to sanity cms 
 - [ ] Payment portal link to square
 - [ ] Blog/News section (if needed)
 - [ ] Image optimization settings
