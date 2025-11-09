@@ -225,3 +225,51 @@ export function useGlobalData() {
     error: siteSettings.error || navigation.error || socialLinks.error,
   };
 }
+
+/**
+ * Combined hook for all services (for homepage ServiceSection)
+ * @returns {object} Object with services array and combined states
+ */
+export function useAllServices() {
+  const windowService = useWindowService();
+  const commercialService = useCommercialService();
+  const residentialService = useResidentialService();
+  const electrostaticService = useElectrostaticService();
+
+  const isLoading =
+    windowService.isLoading ||
+    commercialService.isLoading ||
+    residentialService.isLoading ||
+    electrostaticService.isLoading;
+
+  const isError =
+    windowService.isError ||
+    commercialService.isError ||
+    residentialService.isError ||
+    electrostaticService.isError;
+
+  const error =
+    windowService.error ||
+    commercialService.error ||
+    residentialService.error ||
+    electrostaticService.error;
+
+  // Map services to format needed by ServiceSection
+  const services = [
+    windowService.data,
+    commercialService.data,
+    residentialService.data,
+    electrostaticService.data,
+  ].filter(Boolean).map(service => ({
+    link: service.link,
+    text: service.linkText,
+    image: service.linkImage,
+  }));
+
+  return {
+    services,
+    isLoading,
+    isError,
+    error,
+  };
+}
