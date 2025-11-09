@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import SEO from './components/SEO';
 import { useAboutUs } from './lib/cms/helpers';
-import windowIMG from './assets/window.png';
-import cleanIMG from './assets/clean.png';
-import commercialIMG from './assets/com.jpg';
-import residentialIMG from './assets/res.jpg';
-import staticIMG from './assets/static.jpg';
 
 function AboutUsPage() {
   // Fetch CMS data
@@ -14,10 +9,9 @@ function AboutUsPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Use CMS gallery images if available, otherwise fallback to local assets
-  const fallbackImages = [windowIMG, cleanIMG, commercialIMG, residentialIMG, windowIMG];
   const images = aboutData?.gallery?.length > 0
     ? aboutData.gallery.map(img => img.url).filter(Boolean)
-    : fallbackImages;
+    :[0]; 
 
   // Use CMS carousel interval if available, otherwise fallback to 4000ms
   const carouselInterval = aboutData?.carouselInterval
@@ -64,7 +58,7 @@ function AboutUsPage() {
         {/* Main Image */}
           <div className="bg-[#D1D1D1] rounded-3xl mb-8 overflow-hidden min-h-[300px]">
             <img
-              src={aboutData?.heroImage || staticIMG}
+              src={aboutData?.heroImage}
               alt={aboutData?.heroImageAlt || "About McKenna's Cleaning"}
               className="w-full h-[300px] md:h-[420px] object-cover block"
             />
@@ -126,7 +120,7 @@ function AboutUsPage() {
                 transition: 'transform 600ms cubic-bezier(.22,.9,.31,1)'
               }}
             >
-              {images.map((src, idx) => {
+              {images && images.map((src, idx) => {
                 const altText = aboutData?.gallery?.[idx]?.alt || `Gallery image ${idx + 1}`;
                 return (
                   <div key={idx} className="flex-shrink-0 w-full flex items-center justify-center min-h-[350px] overflow-hidden">
