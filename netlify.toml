@@ -5,6 +5,9 @@
   # Directory where build output is placed (Vite default)
   publish = "dist"
 
+  # Netlify Functions directory
+  functions = "netlify/functions"
+
 # Netlify Forms
 # Forms are automatically detected via data-netlify="true" attribute
 # Contact form submissions will be available in Netlify dashboard

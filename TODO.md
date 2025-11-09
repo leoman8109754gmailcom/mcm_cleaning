@@ -80,6 +80,14 @@
 - [x] Update Sanity Studio config with About Us singleton
 - [x] All content fields support CMS data with fallback to hardcoded values
 
+---
+
+## 🚧 In Progress
+
+Nothing currently in progress.
+
+---
+
 ### Phase 7: SEO & Metadata
 - [x] Install react-helmet-async for meta tags management
 - [x] Create reusable SEO field group (seoFields.js):
@@ -125,14 +133,6 @@
 - [x] Configure Netlify Forms (auto-detected via data-netlify attribute)
 - [x] SEO integration for contact pages
 
-### Phase 8.5: Services Section CMS Control
-- [x] Add linkText and linkImage fields to all 4 service schemas (windowService, commercialService, residentialService, electrostaticService)
-- [x] Update all 4 service queries to fetch linkText and linkImage with proper asset expansion
-- [x] Create useAllServices() hook in helpers.js to fetch all services in parallel
-- [x] Update ServiceSection component to use CMS data instead of hardcoded services
-- [x] Implement loading and error states with fallback to hardcoded data
-- [x] Services section now fully CMS-controlled via Sanity Studio
-
 ---
 
 ## 🚧 In Progress
@@ -147,8 +147,13 @@ Nothing currently in progress.
 
 ## 📋 Planned
 
+### Phase 8.5 Add services section control
+- [ ] Add service link text, and link image to each service page schema in sanity
+- [ ] Add query for services section links and images and text
+- [ ] Modify services section with queried data and images instead of hardcoded data, have text placeholders, but not image placeholders
+
 ### Phase 9: Additional Features (Nice to Have)
-- [ ] Make contact form send an email via mailgun 
+- [ ] Make contact form send an email or log to sanity cms 
 - [ ] Payment portal link to square
 - [ ] Blog/News section (if needed)
 - [ ] Image optimization settings
@@ -164,8 +169,7 @@ Nothing currently in progress.
 | **Global Settings** | ✅ Complete | Logo, company name, contact info |
 | **Navigation** | ✅ Complete | Nav links, social links, hide/show items |
 | **Hero Section** | ✅ Complete | Title, description, carousel images, CTA |
-| **Services Section** | ✅ Complete | Homepage services menu (linkText, linkImage for all 4 services) |
-| **Service Pages** | ✅ Complete | Individual service page content (4 singleton schemas) |
+| **Services** | ✅ Complete | Individual service page content (4 singleton schemas) |
 | **Reviews/Testimonials** | ✅ Complete | Customer reviews with ratings, photos, display order |
 | **About Us** | ✅ Complete | All page content, hero image, statements, gallery |
 | **SEO/Meta** | ✅ Complete | Meta tags, OG images, keywords, noIndex for all pages |
@@ -196,5 +200,5 @@ Nothing currently in progress.
 
 ---
 
-**Last Updated:** 2025-11-09
+**Last Updated:** 2025-11-06
 **Current Phase:** Phase 9 - Additional Features (Optional)

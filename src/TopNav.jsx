@@ -118,7 +118,7 @@ export default function TopNav() {
               ariaLabel: item.label,
               link: item.href
             })),
-            { label: 'CONTACT', ariaLabel: 'Contact', link: '#contact' }
+            { label: 'CONTACT', ariaLabel: 'Contact', link: '/contact' }
           ]}
           socialItems={socialItems}
           displaySocials={socialLinks?.displaySocials ?? false}

@@ -4,13 +4,6 @@ import TopNav from './TopNav';
 import SEO from './components/SEO';
 import { useHero } from './lib/cms/helpers';
 import { LoadingSkeleton } from './components/LoadingSpinner';
-// GSAP is not used here anymore (menu animation moved to TopNav/StaggeredMenu)
-import Logo from './assets/brand-logo.png'
-import HeroIMG from './assets/clean.png'
-import HeroIMG2 from './assets/com.jpg'
-import HeroIMG3 from './assets/res.jpg'
-// StaggeredMenu is provided by TopNav; remove local duplicate
-
 
 const HeroSection = () => {
   // Fetch hero data from CMS
@@ -19,7 +12,7 @@ const HeroSection = () => {
   // Use CMS images if available, fallback to hardcoded
   const images = hero?.carouselImages?.length > 0
     ? hero.carouselImages.map(img => img.url)
-    : [HeroIMG, HeroIMG2, HeroIMG3];
+    : [];
   const [active, setActive] = React.useState(0);
   const [mounted, setMounted] = React.useState(false);
 
@@ -109,7 +102,7 @@ const HeroSection = () => {
 
         {/* Right Column - Crossfade Carousel */}
   <div className="relative w-full overflow-hidden rounded-lg shadow-2xl h-64 sm:h-80 md:h-96 lg:h-[60vh] xl:h-[70vh] lg:pl-8 xl:pl-16 lg:border-l lg:border-white/10">
-          {heroLoading ? (
+          {hero && heroLoading ? (
             <LoadingSkeleton width="100%" height="100%" />
           ) : (
             images.map((src, i) => {
