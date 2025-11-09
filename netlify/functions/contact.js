@@ -1,5 +1,5 @@
-const formData = require('form-data');
-const Mailgun = require('mailgun.js');
+import formData from 'form-data';
+import Mailgun from 'mailgun.js';
 
 /**
  * Sends an email using Mailgun with the provided form data
@@ -183,4 +183,4 @@ const handler = async (event) => {
   }
 };
 
-module.exports = { handler };
+export { handler };
