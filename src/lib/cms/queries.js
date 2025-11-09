@@ -204,6 +204,20 @@ export const windowServiceQuery = {
       caption
     },
     carouselInterval,
+    linkText,
+    linkImage {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt
+    },
     seo {
       metaTitle,
       metaDescription,
@@ -239,6 +253,10 @@ export const windowServiceQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 3,
+      linkText: data.linkText || 'WINDOWS.',
+      linkImage: data.linkImage?.asset?.url || null,
+      linkImageAlt: data.linkImage?.alt || 'Window cleaning',
+      link: '/windowser',
       seo: {
         metaTitle: data.seo?.metaTitle || null,
         metaDescription: data.seo?.metaDescription || null,
@@ -274,6 +292,20 @@ export const commercialServiceQuery = {
       caption
     },
     carouselInterval,
+    linkText,
+    linkImage {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt
+    },
     seo {
       metaTitle,
       metaDescription,
@@ -309,6 +341,10 @@ export const commercialServiceQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 3,
+      linkText: data.linkText || 'COMMERCIAL.',
+      linkImage: data.linkImage?.asset?.url || null,
+      linkImageAlt: data.linkImage?.alt || 'Commercial cleaning',
+      link: '/commercial-cleaning',
       seo: {
         metaTitle: data.seo?.metaTitle || null,
         metaDescription: data.seo?.metaDescription || null,
@@ -344,6 +380,20 @@ export const residentialServiceQuery = {
       caption
     },
     carouselInterval,
+    linkText,
+    linkImage {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt
+    },
     seo {
       metaTitle,
       metaDescription,
@@ -379,6 +429,10 @@ export const residentialServiceQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 3,
+      linkText: data.linkText || 'RESIDENTIAL.',
+      linkImage: data.linkImage?.asset?.url || null,
+      linkImageAlt: data.linkImage?.alt || 'Residential cleaning',
+      link: '/residential-cleaning',
       seo: {
         metaTitle: data.seo?.metaTitle || null,
         metaDescription: data.seo?.metaDescription || null,
@@ -414,6 +468,20 @@ export const electrostaticServiceQuery = {
       caption
     },
     carouselInterval,
+    linkText,
+    linkImage {
+      asset->{
+        _id,
+        url,
+        metadata {
+          dimensions {
+            width,
+            height
+          }
+        }
+      },
+      alt
+    },
     seo {
       metaTitle,
       metaDescription,
@@ -449,6 +517,10 @@ export const electrostaticServiceQuery = {
         height: img.asset?.metadata?.dimensions?.height,
       })),
       carouselInterval: data.carouselInterval || 3,
+      linkText: data.linkText || 'ELECTROSTATIC.',
+      linkImage: data.linkImage?.asset?.url || null,
+      linkImageAlt: data.linkImage?.alt || 'Electrostatic cleaning',
+      link: '/electrostatic-cleaning',
       seo: {
         metaTitle: data.seo?.metaTitle || null,
         metaDescription: data.seo?.metaDescription || null,

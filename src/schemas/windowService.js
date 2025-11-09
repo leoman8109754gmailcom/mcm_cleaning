@@ -59,6 +59,27 @@ export default {
       initialValue: 3,
       validation: (Rule) => Rule.min(1).max(10),
     },
+    {
+      name: 'linkText',
+      type: 'string',
+      title: 'Homepage Link Text',
+      description: 'Text displayed in the homepage services menu (e.g., "WINDOWS.")',
+      initialValue: 'WINDOWS.',
+    },
+    {
+      name: 'linkImage',
+      type: 'image',
+      title: 'Homepage Link Image',
+      description: 'Image displayed in the homepage services menu hover effect',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt Text',
+          description: 'Accessibility description',
+        },
+      ],
+    },
     ...seoFields,
   ],
 };

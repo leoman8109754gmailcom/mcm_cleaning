@@ -1,6 +1,8 @@
 import React from 'react';
 import { gsap } from 'gsap';
 import { Link } from 'react-router-dom';
+import { useAllServices } from './lib/cms/helpers';
+import LoadingSpinner from './components/LoadingSpinner';
 import windowIMG from './assets/window.png';
 import commercialIMG from './assets/com.jpg';
 import residentialIMG from './assets/res.jpg';
@@ -126,28 +128,34 @@ function MenuItem({ link, text, image }) {
 }
 
 function ServicesSection() {
-  const services = [
+  const { services: cmsServices, isLoading, isError } = useAllServices();
+
+  // Fallback services with hardcoded data
+  const fallbackServices = [
     {
       link: '/windowser',
       text: 'WINDOWS.',
-      image: windowIMG // imported image file
+      image: windowIMG
     },
     {
       link: '/commercial-cleaning',
       text: 'COMMERCIAL.',
-      image: commercialIMG // Replace with your actual image path
+      image: commercialIMG
     },
     {
       link: '/residential-cleaning',
       text: 'RESIDENTIAL.',
-      image: residentialIMG // Replace with your actual image path
+      image: residentialIMG
     },
     {
       link: '/electrostatic-cleaning',
       text: 'ELECTROSTATIC.',
-      image: staticIMG // Replace with your actual image path
+      image: staticIMG
     }
   ];
+
+  // Use CMS data if available, otherwise fall back to hardcoded data
+  const services = (cmsServices && cmsServices.length > 0) ? cmsServices : fallbackServices;
 
   return (
     <section className="w-full min-h-screen bg-[#2B6B6B] py-16">
@@ -157,14 +165,34 @@ function ServicesSection() {
           MULTIPLE CLEANING SERVICES
         </h2>
 
-        {/* Flowing Menu */}
-  <div className="w-full h-[400px] md:h-[600px] lg:h-[700px]">
-          <nav className="flex flex-col h-full m-0 p-0">
-            {services.map((item, idx) => (
-              <MenuItem key={idx} {...item} />
-            ))}
-          </nav>
-        </div>
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex justify-center items-center h-[400px]">
+            <LoadingSpinner />
+          </div>
+        )}
+
+        {/* Error State - still show services with fallback data */}
+        {isError && !isLoading && (
+          <div className="w-full h-[400px] md:h-[600px] lg:h-[700px]">
+            <nav className="flex flex-col h-full m-0 p-0">
+              {services.map((item, idx) => (
+                <MenuItem key={idx} {...item} />
+              ))}
+            </nav>
+          </div>
+        )}
+
+        {/* Normal State */}
+        {!isLoading && !isError && (
+          <div className="w-full h-[400px] md:h-[600px] lg:h-[700px]">
+            <nav className="flex flex-col h-full m-0 p-0">
+              {services.map((item, idx) => (
+                <MenuItem key={idx} {...item} />
+              ))}
+            </nav>
+          </div>
+        )}
       </div>
     </section>
   );
