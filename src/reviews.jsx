@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTestimonials } from './lib/cms/helpers';
 
 // Inline chevron icons to avoid adding an external dependency (fixes build errors when
 // 'lucide-react' isn't installed on the deployment environment).
@@ -19,6 +20,9 @@ function ChevronRight(props) {
 }
 
 export default function TestimonialCarousel() {
+  // Fetch CMS testimonials data
+  const { data: cmsTestimonials, isLoading, isError } = useTestimonials();
+
   const [currentIndex, setCurrentIndex] = useState(0);
   // responsive items per view (1 on small, 2 on medium, 3 on large)
   const [itemsPerView, setItemsPerView] = useState(() => {
@@ -41,28 +45,7 @@ export default function TestimonialCarousel() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  const testimonials = [
-    {
-      id: 1,
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget ligula pharetra, cursus ex sit amet, fermentum turpis.",
-      author: "Sarah Johnson",
-    },
-    {
-      id: 2,
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget ligula pharetra, cursus ex sit amet, fermentum turpis.",
-      author: "Michael Chen",
-    },
-    {
-      id: 3,
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget ligula pharetra, cursus ex sit amet, fermentum turpis.",
-      author: "Emily Rodriguez",
-    },
-    {
-      id: 4,
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eget ligula pharetra, cursus ex sit amet, fermentum turpis.",
-      author: "David Thompson",
-    }
-  ];
+  const testimonials = cmsTestimonials || [0];
 
   const maxIndex = Math.max(0, testimonials.length - itemsPerView);
   const itemWidthPercent = 100 / itemsPerView;
@@ -94,23 +77,40 @@ export default function TestimonialCarousel() {
               className="flex transition-transform duration-500 ease-out"
               style={{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }}
             >
-              {testimonials.map((testimonial) => (
+              {testimonials && testimonials.map((testimonial) => (
                 <div
                   key={testimonial.id}
                   className="flex-shrink-0 px-4"
                   style={{ flex: `0 0 ${itemWidthPercent}%` }}
                 >
                   <div className="bg-gradient-to-br from-[#043B62] to-[#17616E] rounded-3xl p-6 sm:p-8 h-64 sm:h-72 md:h-80 lg:h-96 flex flex-col justify-between shadow-xl hover:shadow-2xl transition-shadow duration-300">
-                    <p className="text-[#EA892C] text-base sm:text-lg leading-relaxed">
-                      {testimonial.text}
-                    </p>
+                    <div>
+                      {/* Star rating */}
+                      {testimonial.rating && (
+                        <div className="flex gap-1 mb-3">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <span
+                              key={i}
+                              className={`text-xl ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-400'}`}
+                            >
+                              ★
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <p className="text-[#EA892C] text-base sm:text-lg leading-relaxed">
+                        {testimonial.text}
+                      </p>
+                    </div>
                     <div className="text-right">
                       <p className="text-[#EA892C] text-lg sm:text-xl font-medium">
-                        - {testimonial.author}
+                        - {testimonial.customerName}
                       </p>
-                      <p className="text-teal-200 text-sm mt-1">
-                        {testimonial.role}
-                      </p>
+                      {testimonial.role && (
+                        <p className="text-teal-200 text-sm mt-1">
+                          {testimonial.role}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -1,0 +1,47 @@
+[build]
+  # Build command to run
+  command = "npm run build"
+
+  # Directory where build output is placed (Vite default)
+  publish = "dist"
+
+  # Netlify Functions directory
+  functions = "netlify/functions"
+
+# Netlify Forms
+# Forms are automatically detected via data-netlify="true" attribute
+# Contact form submissions will be available in Netlify dashboard
+# No additional configuration needed - Netlify handles it automatically
+
+# Redirects and rewrites
+[[redirects]]
+  # SPA fallback - redirect all routes to index.html for client-side routing
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Cache control for HTML (no cache to ensure fresh deploys)
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    # Cache static assets for 1 year
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Development server settings (optional)
+[dev]
+  command = "npm run dev"
+  port = 3000
+  targetPort = 5173
+  autoLaunch = false

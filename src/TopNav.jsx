@@ -2,10 +2,17 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from './assets/brand-logo.png';
 import StaggeredMenu from './components/StaggeredMenu';
+import { useSiteSettings, useNavigation, useSocialLinks } from './lib/cms/helpers';
+import LoadingSpinner, { LoadingSkeleton } from './components/LoadingSpinner';
 
 export default function TopNav() {
   const location = useLocation();
   const pathname = location && location.pathname ? location.pathname : '/';
+
+  // Fetch CMS data
+  const { data: siteSettings, isLoading: settingsLoading, error: settingsError } = useSiteSettings();
+  const { data: navigation, isLoading: navLoading, error: navError } = useNavigation();
+  const { data: socialLinks, isLoading: socialsLoading, error: socialsError } = useSocialLinks();
 
   // pages where the nav backdrop should be available
   const backdropPages = ['/', '/windowser', '/commercial-cleaning'];
@@ -33,24 +40,72 @@ export default function TopNav() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [isMenuOpen]);
 
+  // Prepare navigation items (use CMS data if available, fallback to hardcoded)
+  // Filter out disabled items
+  const navItems = navigation?.mainNav?.filter(item => !item.disabled) || [
+    { label: 'About', href: '/about-us' },
+    { label: 'Electrostatic Spraying', href: '/electrostatic-cleaning' },
+    { label: 'Residential Cleaning', href: '/residential-cleaning' },
+    { label: 'Commercial Cleaning', href: '/commercial-cleaning' },
+    { label: 'Window Cleaning', href: '/windowser' },
+  ];
+
+  // Prepare social links (use CMS data if available)
+  const socialItems = [];
+  if (socialLinks?.displaySocials) {
+    if (socialLinks.facebook) socialItems.push({ label: 'Facebook', link: socialLinks.facebook });
+    if (socialLinks.instagram) socialItems.push({ label: 'Instagram', link: socialLinks.instagram });
+    if (socialLinks.twitter) socialItems.push({ label: 'Twitter', link: socialLinks.twitter });
+    if (socialLinks.linkedin) socialItems.push({ label: 'LinkedIn', link: socialLinks.linkedin });
+  }
+
+  // Use CMS logo if available, fallback to local logo
+  const logoUrl = siteSettings?.logo?.url || Logo;
+  const logoAlt = siteSettings?.logo?.alt || 'logo';
+
   // when nav is visible and route applies, show the translucent backdrop; otherwise transparent
   const navClass = `fixed inset-x-0 top-0 z-50 flex items-center justify-between px-4 py-4 transform transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'} ${applies && isVisible ? 'nav-backdrop' : 'bg-transparent'}`;
+
+  // Show loading state while fetching CMS data
+  if (settingsLoading || navLoading) {
+    return (
+      <nav className={navClass}>
+        <div className="flex items-center">
+          <LoadingSkeleton width="3.5rem" height="3.5rem" />
+        </div>
+        <div className="hidden md:flex items-center gap-8">
+          <LoadingSkeleton width="4rem" height="1.5rem" />
+          <LoadingSkeleton width="6rem" height="1.5rem" />
+          <LoadingSkeleton width="6rem" height="1.5rem" />
+        </div>
+      </nav>
+    );
+  }
+
+  // If there's an error, fall back to hardcoded values (silent failure)
+  if (settingsError || navError) {
+    console.error('Error loading navigation data:', settingsError || navError);
+  }
 
   return (
     <nav className={navClass}>
       <div className="flex items-center">
         <Link to="/" aria-label="Go to home">
-          <img src={Logo} alt="logo" className="h-14" />
+          <img src={logoUrl} alt={logoAlt} className="h-14" />
         </Link>
       </div>
 
       <div className="hidden md:flex items-center gap-8">
-        <Link to="/about-us" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">About</Link>
-        <Link to="/electrostatic-cleaning" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">Electrostatic Spraying</Link>
-        <Link to="/residential-cleaning" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">Residential Cleaning</Link>
-        <Link to="/commercial-cleaning" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">Commercial Cleaning</Link>
-        <Link to="/windowser" className="text-[#17616E] hover:text-teal-700 transition-colors font-medium">Window Cleaning</Link>
-        <a href="#contact" className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg">CONTACT</a>
+        {navItems.map((item, index) => (
+          <Link
+            key={item.key || index}
+            to={item.href}
+            className="text-[#17616E] hover:text-teal-700 transition-colors font-medium"
+          >
+            {item.label}
+          </Link>
+        ))}
+        <a href="/contact" className="font-bayon inline-block bg-teal-700 text-[#EA892C] px-4 py-1 rounded-md hover:bg-teal-800 transition-colors font-medium tracking-wide text-lg">CONTACT</a>
       </div>
 
       {/* Mobile menu */}
@@ -58,24 +113,19 @@ export default function TopNav() {
         <StaggeredMenu
           position="right"
           items={[
-            { label: 'About', ariaLabel: 'About', link: '/about-us' },
-            { label: 'Electrostatic Spraying', ariaLabel: 'Electrostatic Spraying', link: '/electrostatic-cleaning' },
-            { label: 'Residential Cleaning', ariaLabel: 'Residential Cleaning', link: '/residential-cleaning' },
-            { label: 'Commercial Cleaning', ariaLabel: 'Commercial Cleaning', link: '/commercial-cleaning' },
-            { label: 'Window Cleaning', ariaLabel: 'Window Cleaning', link: '/windowser' },
-            { label: 'CONTACT', ariaLabel: 'Contact', link: '#contact' }
+            ...navItems.map(item => ({
+              label: item.label,
+              ariaLabel: item.label,
+              link: item.href
+            })),
+            { label: 'CONTACT', ariaLabel: 'Contact', link: '/contact' }
           ]}
-          socialItems={[
-            { label: 'Twitter', link: 'https://twitter.com' },
-            { label: 'GitHub', link: 'https://github.com' },
-            { label: 'LinkedIn', link: 'https://linkedin.com' }
-          ]}
-          displaySocials={false}
-          displayItemNumbering={false}
+          socialItems={socialItems}
+          displaySocials={socialLinks?.displaySocials ?? false}
           menuButtonColor="#17616E"
           openMenuButtonColor="#17616E"
           changeMenuColorOnOpen={true}
-          logoUrl={Logo}
+          logoUrl={logoUrl}
           onMenuOpen={() => setIsMenuOpen(true)}
           onMenuClose={() => setIsMenuOpen(false)}
         />

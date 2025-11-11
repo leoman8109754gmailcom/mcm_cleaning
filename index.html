@@ -12,6 +12,14 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx"></script><!-- Netlify form detection template -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <textarea name="service"></textarea>
+      <input type="text" name="preferred-datetime" />
+      <textarea name="message"></textarea>
+    </form>
   </body>
 </html>

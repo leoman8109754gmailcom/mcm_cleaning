@@ -36,3 +36,6 @@ Thumbs.db
 
 # lockfiles (optional to include)
 package-lock.json
+
+# Local Netlify folder
+.netlify
