@@ -65,9 +65,31 @@ export default function ContactPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Validate phone number
+  const validatePhone = (phone) => {
+    // Remove all non-digit characters
+    const digitsOnly = phone.replace(/\D/g, '');
+
+    // US phone numbers should be 10 digits, or 11 if it starts with 1 (country code)
+    if (digitsOnly.length === 10) {
+      return true;
+    }
+    if (digitsOnly.length === 11 && digitsOnly.startsWith('1')) {
+      return true;
+    }
+    return false;
+  };
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate phone number
+    if (!validatePhone(form.phone)) {
+      notify('Please check that your phone number is valid. It should be 10 digits (e.g., (123) 456-7890).', 'error');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
