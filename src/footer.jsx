@@ -1,5 +1,4 @@
 import React from 'react';
-import Logo from './assets/brand-logo.png';
 import { Link } from 'react-router-dom';
 import { useSiteSettings, useSocialLinks } from './lib/cms/helpers';
 import { LoadingSkeleton } from './components/LoadingSpinner';

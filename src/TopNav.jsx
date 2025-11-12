@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import Logo from './assets/brand-logo.png';
 import StaggeredMenu from './components/StaggeredMenu';
 import { useSiteSettings, useNavigation, useSocialLinks } from './lib/cms/helpers';
 import LoadingSpinner, { LoadingSkeleton } from './components/LoadingSpinner';
@@ -59,8 +58,8 @@ export default function TopNav() {
     if (socialLinks.linkedin) socialItems.push({ label: 'LinkedIn', link: socialLinks.linkedin });
   }
 
-  // Use CMS logo if available, fallback to local logo
-  const logoUrl = siteSettings?.logo?.url || Logo;
+  // Use CMS logo
+  const logoUrl = siteSettings?.logo?.url;
   const logoAlt = siteSettings?.logo?.alt || 'logo';
 
   // when nav is visible and route applies, show the translucent backdrop; otherwise transparent

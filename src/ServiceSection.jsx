@@ -3,10 +3,6 @@ import { gsap } from 'gsap';
 import { Link } from 'react-router-dom';
 import { useAllServices } from './lib/cms/helpers';
 import LoadingSpinner from './components/LoadingSpinner';
-import windowIMG from './assets/window.png';
-import commercialIMG from './assets/com.jpg';
-import residentialIMG from './assets/res.jpg';
-import staticIMG from './assets/static.jpg';
 
 function MenuItem({ link, text, image }) {
   const itemRef = React.useRef(null);
@@ -130,32 +126,8 @@ function MenuItem({ link, text, image }) {
 function ServicesSection() {
   const { services: cmsServices, isLoading, isError } = useAllServices();
 
-  // Fallback services with hardcoded data
-  const fallbackServices = [
-    {
-      link: '/windowser',
-      text: 'WINDOWS.',
-      image: windowIMG
-    },
-    {
-      link: '/commercial-cleaning',
-      text: 'COMMERCIAL.',
-      image: commercialIMG
-    },
-    {
-      link: '/residential-cleaning',
-      text: 'RESIDENTIAL.',
-      image: residentialIMG
-    },
-    {
-      link: '/electrostatic-cleaning',
-      text: 'ELECTROSTATIC.',
-      image: staticIMG
-    }
-  ];
-
-  // Use CMS data if available, otherwise fall back to hardcoded data
-  const services = (cmsServices && cmsServices.length > 0) ? cmsServices : fallbackServices;
+  // Use CMS data directly
+  const services = cmsServices || [];
 
   return (
     <section className="w-full min-h-screen bg-[#2B6B6B] py-16">
