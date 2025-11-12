@@ -8,10 +8,10 @@ function AboutUsPage() {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Use CMS gallery images if available, otherwise fallback to local assets
+  // Use CMS gallery images
   const images = aboutData?.gallery?.length > 0
     ? aboutData.gallery.map(img => img.url).filter(Boolean)
-    :[0]; 
+    : []; 
 
   // Use CMS carousel interval if available, otherwise fallback to 4000ms
   const carouselInterval = aboutData?.carouselInterval
