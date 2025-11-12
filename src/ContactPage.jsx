@@ -2,13 +2,13 @@
  * Contact Page Component
  *
  * Features:
- * - Netlify Forms integration for contact submissions
+ * - Netlify Functions + Mailgun for contact submissions
  * - CMS-managed content
  * - Blocked dates calendar widget
  * - Contact information display
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import SEO from './components/SEO';
 import BlockedDatesCalendar from './components/BlockedDatesCalendar';
 import { useContactPage, useSiteSettings } from './lib/cms/helpers';
@@ -19,6 +19,81 @@ export default function ContactPage() {
   const { data: siteSettings, isLoading: settingsLoading } = useSiteSettings();
 
   const isLoading = contactLoading || settingsLoading;
+
+  // Form state
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    service: '',
+    preferredDatetime: '',
+    message: ''
+  });
+
+  // Notification state
+  const [notification, setNotification] = useState({
+    show: false,
+    message: '',
+    type: 'success' // 'success' or 'error'
+  });
+
+  // Submitting state
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Show notification for 5 seconds
+  const notify = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: 'success' });
+    }, 5000);
+  };
+
+  // Clear form
+  const clearForm = () => {
+    setForm({
+      name: '',
+      email: '',
+      phone: '',
+      service: '',
+      preferredDatetime: '',
+      message: ''
+    });
+  };
+
+  // Handle input changes
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/.netlify/functions/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        notify('Thank you for contacting us! We\'ll get back to you within 24 hours.', 'success');
+        clearForm();
+      } else {
+        notify(data.error || 'Failed to send message. Please try again.', 'error');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      notify('An error occurred. Please try again or contact us directly.', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section className="w-full min-h-screen bg-[#FFEBD0] pt-28 md:pt-32 pb-12 px-6 md:px-8">
@@ -57,15 +132,21 @@ export default function ContactPage() {
               {contactData?.formHeading || 'Request a Quote'}
             </h2>
 
-            <form
-              name="contact"
-              method="POST"
-              data-netlify="true"
-              action="/contact/thank-you"
-              className="space-y-4"
-            >
-              {/* Hidden field for Netlify */}
-              <input type="hidden" name="form-name" value="contact" />
+            {/* Notification */}
+            {notification.show && (
+              <div
+                className={`mb-6 p-4 rounded-lg border-l-4 ${
+                  notification.type === 'success'
+                    ? 'bg-green-50 border-green-500 text-green-800'
+                    : 'bg-red-50 border-red-500 text-red-800'
+                }`}
+                role="alert"
+              >
+                <p className="font-medium">{notification.message}</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
 
               {/* Name */}
               <div>
@@ -76,8 +157,11 @@ export default function ContactPage() {
                   type="text"
                   id="name"
                   name="name"
+                  value={form.name}
+                  onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                   placeholder="Your full name"
                 />
               </div>
@@ -91,8 +175,11 @@ export default function ContactPage() {
                   type="email"
                   id="email"
                   name="email"
+                  value={form.email}
+                  onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                   placeholder="your@email.com"
                 />
               </div>
@@ -106,8 +193,11 @@ export default function ContactPage() {
                   type="tel"
                   id="phone"
                   name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                   placeholder="(123) 456-7890"
                 />
               </div>
@@ -120,23 +210,29 @@ export default function ContactPage() {
                 <textarea
                   id="service"
                   name="service"
+                  value={form.service}
+                  onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                   rows={3}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all resize-none"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                   placeholder="Describe the cleaning service you need..."
                 />
               </div>
 
               {/* Preferred Date/Time */}
               <div>
-                <label htmlFor="preferred-datetime" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label htmlFor="preferredDatetime" className="block text-sm font-semibold text-gray-700 mb-2">
                   Preferred Date/Time <span className="text-gray-500 text-xs">(Optional)</span>
                 </label>
                 <input
                   type="text"
-                  id="preferred-datetime"
-                  name="preferred-datetime"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all"
+                  id="preferredDatetime"
+                  name="preferredDatetime"
+                  value={form.preferredDatetime}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                   placeholder="e.g., Monday morning, Dec 15 at 10am"
                 />
               </div>
@@ -149,8 +245,11 @@ export default function ContactPage() {
                 <textarea
                   id="message"
                   name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
                   rows={4}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all resize-none"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#17616E] focus:ring-2 focus:ring-[#17616E]/20 outline-none transition-all resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                   placeholder="Any additional details or questions..."
                 />
               </div>
@@ -158,9 +257,10 @@ export default function ContactPage() {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-[#17616E] hover:bg-[#2B6B6B] text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+                disabled={isSubmitting}
+                className="w-full bg-[#17616E] hover:bg-[#2B6B6B] text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:shadow-none"
               >
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>

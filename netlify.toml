@@ -5,6 +5,9 @@
   # Directory where build output is placed (Vite default)
   publish = "dist"
 
+  # Netlify Functions directory
+  functions = "netlify/functions"
+
 # Netlify Forms
 # Forms are automatically detected via data-netlify="true" attribute
 # Contact form submissions will be available in Netlify dashboard
@@ -39,6 +42,6 @@
 # Development server settings (optional)
 [dev]
   command = "npm run dev"
-  port = 5173
+  port = 3000
   targetPort = 5173
   autoLaunch = false
