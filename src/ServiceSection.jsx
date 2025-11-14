@@ -78,10 +78,14 @@ function MenuItem({ link, text, image }) {
   });
 
   return (
-    <div className="flex-1 relative overflow-hidden text-center border-t-[0px] border-[#2B5F5F]" ref={itemRef}>
+    <div className="flex-1 relative overflow-hidden text-center border-t-[1px] border-[#2B5F5F]" ref={itemRef}>
       {typeof link === 'string' && link.startsWith('/') ? (
         <Link
-          className="font-bayon flex items-center justify-center h-full relative cursor-pointer uppercase no-underline font-bold text-[#EA892C] text-[4vh] tracking-wider hover:text-[#060010] focus:text-[#E8D4B8] focus-visible:text-[#060010] transition-colors"
+          className={`font-bayon flex items-center justify-center h-full relative cursor-pointer uppercase no-underline font-bold text-[#EA892C] text-[4vh] tracking-wider transition-all duration-300 ${
+            isTouchDevice 
+              ? 'min-h-[80px] py-4 px-6 active:bg-[#EA892C] active:text-[#2B6B6B] active:scale-95 border-b-2 border-[#EA892C]/30 shadow-lg' 
+              : 'hover:text-[#060010] focus:text-[#E8D4B8] focus-visible:text-[#060010]'
+          }`}
           to={link}
           {...(!isTouchDevice ? { onMouseEnter: handleMouseEnter, onMouseLeave: handleMouseLeave } : {})}
         >
@@ -89,7 +93,11 @@ function MenuItem({ link, text, image }) {
         </Link>
       ) : (
         <a
-          className="font-bayon flex items-center justify-center h-full relative cursor-pointer uppercase no-underline font-bold text-[#EA892C] text-[4vh] tracking-wider hover:text-[#060010] focus:text-[#E8D4B8] focus-visible:text-[#060010] transition-colors"
+          className={`font-bayon flex items-center justify-center h-full relative cursor-pointer uppercase no-underline font-bold text-[#EA892C] text-[4vh] tracking-wider transition-all duration-300 ${
+            isTouchDevice 
+              ? 'min-h-[80px] py-4 px-6 active:bg-[#EA892C] active:text-[#2B6B6B] active:scale-95 border-b-2 border-[#EA892C]/30 shadow-lg' 
+              : 'hover:text-[#060010] focus:text-[#E8D4B8] focus-visible:text-[#060010]'
+          }`}
           href={link}
           {...(!isTouchDevice ? { onMouseEnter: handleMouseEnter, onMouseLeave: handleMouseLeave } : {})}
         >

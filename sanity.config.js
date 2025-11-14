@@ -14,7 +14,7 @@ export default defineConfig({
   name: 'default',
   title: "McKenna's Cleaning Services CMS",
 
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || '6q20c2o5',
   dataset: import.meta.env.VITE_SANITY_DATASET || 'production',
 
   plugins: [
