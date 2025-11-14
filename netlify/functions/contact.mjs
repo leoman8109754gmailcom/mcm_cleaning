@@ -21,7 +21,7 @@ async function sendEmailWithFormInfo(data) {
   if (!apiKey || !domain || !emailFrom || !emailTo) {
     throw new Error('Missing required environment variables. Please check MG_KEY, MG_DOMAIN, MG_FROM, and MG_TO.');
   }
-
+console.log(process.env, "creds: ");
   // Initialize Mailgun client
   const mailgun = new Mailgun(formData);
   const mg = mailgun.client({ username: 'api', key: apiKey });

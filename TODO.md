@@ -80,14 +80,6 @@
 - [x] Update Sanity Studio config with About Us singleton
 - [x] All content fields support CMS data with fallback to hardcoded values
 
----
-
-## 🚧 In Progress
-
-Nothing currently in progress.
-
----
-
 ### Phase 7: SEO & Metadata
 - [x] Install react-helmet-async for meta tags management
 - [x] Create reusable SEO field group (seoFields.js):
@@ -133,30 +125,16 @@ Nothing currently in progress.
 - [x] Configure Netlify Forms (auto-detected via data-netlify attribute)
 - [x] SEO integration for contact pages
 
----
-
-## 🚧 In Progress
-
-Nothing currently in progress.
-
----
-
-
-
----
-
-## 📋 Planned
 
 ### Phase 8.5 Add services section control
-- [ ] Add service link text, and link image to each service page schema in sanity
-- [ ] Add query for services section links and images and text
-- [ ] Modify services section with queried data and images instead of hardcoded data, have text placeholders, but not image placeholders
+- [x] Add service link text, and link image to each service page schema in sanity
+- [x] Add query for services section links and images and text
+- [x] Modify services section with queried data and images instead of hardcoded data, have text placeholders, but not image placeholders
 
 ### Phase 9: Additional Features (Nice to Have)
-- [ ] Make contact form send an email or log to sanity cms 
-- [ ] Payment portal link to square
-- [ ] Blog/News section (if needed)
+- [x] Make contact form send an email using mail gun 
 - [ ] Image optimization settings
+- [ ] Payment portal link to square
 - [ ] Preview/Draft mode for content
 - [ ] Webhooks for automated deployments on content changes
 
@@ -186,11 +164,11 @@ Nothing currently in progress.
 - **Fallback Support:** Site works even if CMS fails to load
 
 ### Deployment Checklist (When Ready)
-- [ ] Set up production Sanity project
-- [ ] Configure environment variables in deployment platform
-- [ ] Deploy Sanity Studio (embedded at `/admin` or separate)
-- [ ] Test all CMS integrations in production
-- [ ] Set up CORS for Sanity API
+- [x] Set up production Sanity project
+- [X] Configure environment variables in deployment platform
+- [X] Deploy Sanity Studio (embedded at `/admin` or separate)
+- [X] Test all CMS integrations in production
+- [x] Set up CORS for Sanity API
 - [ ] Configure image CDN optimization
 
 ### Documentation

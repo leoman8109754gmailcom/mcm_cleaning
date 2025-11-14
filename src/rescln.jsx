@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SEO from './components/SEO';
 import { useResidentialService } from './lib/cms/helpers';
-import windowIMG from './assets/window.png';
-import cleanIMG from './assets/clean.png';
-import commercialIMG from './assets/com.jpg';
-import residentialIMG from './assets/res.jpg';
 
 function ResidentialCleaningPage() {
   // Fetch CMS data
@@ -32,11 +28,10 @@ function ResidentialCleaningPage() {
   const [isDraggingState, setIsDraggingState] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Use CMS gallery images if available, otherwise fallback to local assets
-  const fallbackImages = [windowIMG, cleanIMG, commercialIMG, residentialIMG];
+  // Use CMS gallery images
   const images = serviceData?.gallery?.length > 0
     ? serviceData.gallery.map(img => img.url).filter(Boolean)
-    : fallbackImages;
+    : [];
 
   // Use CMS carousel interval if available, otherwise fallback to 4000ms
   const carouselInterval = serviceData?.carouselInterval
