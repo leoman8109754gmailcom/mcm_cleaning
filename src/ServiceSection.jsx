@@ -97,7 +97,7 @@ function MenuItem({ link, text, image }) {
         </a>
       )}
       <div
-        className={`absolute top-0 left-0 w-full h-full overflow-hidden ${isTouchDevice ? 'pointer-events-auto translate-y-0' : 'pointer-events-none translate-y-[101%]'} bg-white`}
+        className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none translate-y-[101%] bg-white"
         ref={marqueeRef}
       >
         <div className="h-full w-[200%] flex" ref={marqueeInnerRef}>
