@@ -132,7 +132,12 @@
 - [x] Modify services section with queried data and images instead of hardcoded data, have text placeholders, but not image placeholders
 
 ### Phase 9: Additional Features (Nice to Have)
-- [x] Make contact form send an email using mail gun 
+- [x] Make contact form send an email using mail gun
+- [x] Add availability calendar to homepage (displays blocked dates between Reviews and Footer)
+  - [x] Create availabilityCalendarQuery for efficient data fetching
+  - [x] Create useAvailabilityCalendar helper hook
+  - [x] Create AvailabilitySection component
+  - [x] Integrate into App.jsx homepage route
 - [ ] Image optimization settings
 - [ ] Payment portal link to square
 - [ ] Preview/Draft mode for content
@@ -178,5 +183,5 @@
 
 ---
 
-**Last Updated:** 2025-11-06
+**Last Updated:** 2026-01-14
 **Current Phase:** Phase 9 - Additional Features (Optional)
