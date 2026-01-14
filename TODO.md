@@ -138,6 +138,10 @@
   - [x] Create useAvailabilityCalendar helper hook
   - [x] Create AvailabilitySection component
   - [x] Integrate into App.jsx homepage route
+  - [x] Add interactive hover states to calendar date numbers
+  - [x] Add active (click) states to calendar date numbers
+  - [x] Add optional link prop to BlockedDatesCalendar for click navigation
+  - [x] Configure homepage calendar to link to /contact page
 - [ ] Image optimization settings
 - [ ] Payment portal link to square
 - [ ] Preview/Draft mode for content

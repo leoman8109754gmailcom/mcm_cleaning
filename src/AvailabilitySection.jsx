@@ -33,7 +33,7 @@ export default function AvailabilitySection() {
         )}
 
         {/* Calendar */}
-        <BlockedDatesCalendar blockedDates={availabilityData.blockedDates} />
+        <BlockedDatesCalendar blockedDates={availabilityData.blockedDates} link="/contact" />
       </div>
     </section>
   );
