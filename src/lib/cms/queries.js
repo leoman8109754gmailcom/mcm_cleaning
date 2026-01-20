@@ -688,6 +688,32 @@ export const contactPageQuery = {
 };
 
 /**
+ * Query for availability calendar (blocked dates only)
+ */
+export const availabilityCalendarQuery = {
+  query: `*[_type == "contactPage"][0] {
+    availabilityNotice,
+    blockedDates[] {
+      startDate,
+      endDate,
+      reason
+    }
+  }`,
+  reformat: (data) => {
+    if (!data) return null;
+
+    return {
+      availabilityNotice: data.availabilityNotice || 'Please note: We are unavailable on the dates highlighted below.',
+      blockedDates: (data.blockedDates || []).map((dateRange) => ({
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        reason: dateRange.reason || null,
+      })),
+    };
+  },
+};
+
+/**
  * Query for testimonials
  */
 export const testimonialsQuery = {
@@ -745,6 +771,7 @@ export const queries = {
   testimonials: testimonialsQuery,
   aboutUs: aboutUsQuery,
   contactPage: contactPageQuery,
+  availabilityCalendar: availabilityCalendarQuery,
 };
 
 export default queries;

@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import HeroSection from './HeroSection.jsx'
 import ServiceSection from './ServiceSection.jsx'
 import Reviews from './reviews.jsx'
+import AvailabilitySection from './AvailabilitySection.jsx'
 import ErrorBoundary from './ErrorBoundary.jsx'
 import Footer from './footer.jsx'
 import WindowServices from './windowser.jsx'
@@ -45,6 +46,7 @@ function App() {
                   <HeroSection />
                   <ServiceSection />
                   <Reviews />
+                  <AvailabilitySection />
                   <Footer />
                 </div>
               </>

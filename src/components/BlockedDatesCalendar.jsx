@@ -3,12 +3,15 @@
  *
  * Displays a calendar widget showing unavailable dates
  * Supports showing current month + next 2 months
+ * Optional link prop makes the entire calendar clickable
  */
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
-export default function BlockedDatesCalendar({ blockedDates = [] }) {
+export default function BlockedDatesCalendar({ blockedDates = [], link = null, clickable = true }) {
+  const navigate = useNavigate();
   const [currentMonthOffset, setCurrentMonthOffset] = useState(0);
 
   // Get the current date and calculate displayed month
@@ -89,14 +92,15 @@ export default function BlockedDatesCalendar({ blockedDates = [] }) {
         key={day}
         className={`
           aspect-square flex items-center justify-center rounded-lg text-sm font-medium
-          transition-colors cursor-default relative group
+          transition-colors relative group
           ${blocked
-            ? 'bg-red-100 text-red-700 border-2 border-red-300'
+            ? `bg-red-100 text-red-700 border-2 border-red-300 hover:bg-red-200 ${clickable ? 'active:bg-red-300' : ''}`
             : past
-            ? 'text-gray-400'
-            : 'text-gray-700'
+            ? `text-gray-400 hover:bg-gray-50 ${clickable ? 'active:bg-gray-100' : ''}`
+            : `text-gray-700 hover:bg-gray-100 ${clickable ? 'active:bg-gray-200' : ''}`
           }
           ${today && !blocked ? 'ring-2 ring-[#17616E]' : ''}
+          ${link ? 'cursor-pointer' : 'cursor-default'}
         `}
         title={blocked ? reason : ''}
       >
@@ -110,8 +114,18 @@ export default function BlockedDatesCalendar({ blockedDates = [] }) {
     );
   }
 
+  // Handle click on calendar
+  const handleCalendarClick = () => {
+    if (link) {
+      navigate(link);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+    <div
+      className={`bg-white rounded-2xl p-6 shadow-sm border border-gray-200 ${link ? 'cursor-pointer hover:shadow-md transition-shadow' : ''}`}
+      onClick={handleCalendarClick}
+    >
       {/* Month navigation */}
       <div className="flex items-center justify-between mb-4">
         <button
@@ -176,4 +190,6 @@ BlockedDatesCalendar.propTypes = {
       reason: PropTypes.string,
     })
   ),
+  link: PropTypes.string,
+  clickable: PropTypes.bool,
 };

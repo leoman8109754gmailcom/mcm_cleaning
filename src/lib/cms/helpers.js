@@ -208,6 +208,20 @@ export function useContactPage() {
 }
 
 /**
+ * React Query hook for Availability Calendar (blocked dates only)
+ * @returns {object} React Query result with availability calendar data
+ */
+export function useAvailabilityCalendar() {
+  return useQuery({
+    queryKey: ['availabilityCalendar'],
+    queryFn: () => getContent('availabilityCalendar'),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    cacheTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2,
+  });
+}
+
+/**
  * Combined hook for all global data (useful for pages that need everything)
  * @returns {object} Object with all global data queries
  */
